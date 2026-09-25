@@ -1,0 +1,271 @@
+{
+  "date": "2026-09-23",
+  "label": "9月23日",
+  "intro": "今天重点看三条主线：人民币走强带来资产定价新变量；机器人量产审厂进入关键确认；油价回落继续改善航空成本预期。",
+  "stories": [
+    {
+      "time": "今晨",
+      "category": "宏观",
+      "status": "新变量",
+      "impact": {
+        "direction": "good",
+        "label": "利好",
+        "sector": "人民币资产"
+      },
+      "title": "人民币升至三年多高位，央行对升值约束有所放松",
+      "body": "人民币在岸和离岸汇率升至三年多高位，市场认为央行近期对人民币升值的约束有所放松，汇率在中美领导人会晤前保持偏强。",
+      "source": "路透",
+      "commentary_label": "会员限免 · 投研拆解",
+      "chain": [
+        {
+          "text": "人民币走强",
+          "tone": "up"
+        },
+        {
+          "text": "汇率预期改善",
+          "tone": "neutral"
+        },
+        {
+          "text": "外资配置人民币资产的汇兑压力下降",
+          "tone": "down"
+        },
+        {
+          "text": "关键变化：人民币资产定价环境出现边际改善",
+          "tone": "key",
+          "annotation": "边际改善"
+        },
+        {
+          "text": "风险偏好与估值修复空间提升",
+          "tone": "up"
+        },
+        {
+          "text": "利好人民币资产",
+          "tone": "up"
+        }
+      ],
+      "research_note": {
+        "label": "继续观察：",
+        "text": "汇率强势能否延续，以及外资流入是否同步改善"
+      }
+    },
+    {
+      "time": "昨日",
+      "category": "产业",
+      "status": "关键确认",
+      "impact": {
+        "direction": "good",
+        "label": "利好",
+        "sector": "机器人零部件"
+      },
+      "title": "特斯拉启动机器人量产审厂，已走访多家供应链企业",
+      "body": "团队已走访拓普、三花、均胜等长三角供应链企业，重点核查产线质量、交付能力及合规情况，审厂通过后将进入正式生产准备阶段。",
+      "source": "澎湃新闻",
+      "commentary_label": "投研拆解",
+      "chain": [
+        {
+          "text": "量产审厂启动",
+          "tone": "neutral"
+        },
+        {
+          "text": "进入量产前验证",
+          "tone": "neutral"
+        },
+        {
+          "text": "关键变化：供应链从样品验证转向量产准备",
+          "tone": "key",
+          "annotation": "转向量产准备"
+        },
+        {
+          "text": "核心供应商开始备产",
+          "tone": "neutral"
+        },
+        {
+          "text": "订单与产能利用率预期上修",
+          "tone": "up"
+        },
+        {
+          "text": "利好机器人零部件",
+          "tone": "up"
+        }
+      ],
+      "research_note": {
+        "label": "继续观察：",
+        "text": "正式量产订单是否落地、量产节奏是否按计划推进"
+      }
+    },
+    {
+      "time": "昨夜",
+      "category": "商品",
+      "status": "持续影响",
+      "impact": {
+        "direction": "good",
+        "label": "利好",
+        "sector": "航空"
+      },
+      "title": "国际油价明显回落，WTI盘中跌幅继续扩大",
+      "body": "市场重新评估高油价对下游行业成本的压力。对于燃油成本占比较高的行业，成本端变化可能更快传导到盈利预期。",
+      "source": "卓创资讯",
+      "commentary_label": "投研拆解",
+      "chain": [
+        {
+          "text": "油价回落",
+          "tone": "down"
+        },
+        {
+          "text": "航油采购成本下降",
+          "tone": "down"
+        },
+        {
+          "text": "关键变化：成本端压力开始直接释放盈利弹性",
+          "tone": "key",
+          "annotation": "释放盈利弹性"
+        },
+        {
+          "text": "市场重新上修航空盈利预期",
+          "tone": "up"
+        },
+        {
+          "text": "利好航空",
+          "tone": "up"
+        }
+      ],
+      "research_note": {
+        "label": "继续观察：",
+        "text": "油价回落是否具有持续性，以及航司票价能否保持"
+      }
+    },
+    {
+      "time": "昨夜",
+      "category": "海外",
+      "impact": {
+        "direction": "good",
+        "label": "利好",
+        "sector": "AI算力"
+      },
+      "title": "纳斯达克盘中刷新纪录高位，科技股重新领涨",
+      "body": "美国科技股在AI需求和企业盈利支撑下重新走强，AMD市值突破1万亿美元，费城半导体指数升至一个多月高位。油价回落也改善了市场风险偏好。",
+      "source": "中新经纬",
+      "commentary_label": "投研拆解",
+      "chain": [
+        {
+          "text": "科技股重新领涨",
+          "tone": "up"
+        },
+        {
+          "text": "AI需求与盈利预期保持韧性",
+          "tone": "up"
+        },
+        {
+          "text": "关键变化：高久期成长资产风险偏好重新修复",
+          "tone": "key",
+          "annotation": "风险偏好重新修复"
+        },
+        {
+          "text": "芯片与算力板块估值压力缓解",
+          "tone": "down"
+        },
+        {
+          "text": "资金重新回流高景气成长方向",
+          "tone": "up"
+        },
+        {
+          "text": "利好AI算力",
+          "tone": "up"
+        }
+      ],
+      "research_note": {
+        "label": "继续观察：",
+        "text": "盈利兑现能否跟上估值修复"
+      }
+    },
+    {
+      "time": "昨日",
+      "category": "产业",
+      "impact": {
+        "direction": "good",
+        "label": "利好",
+        "sector": "天然气/LNG"
+      },
+      "title": "沙特阿美拟设独立天然气业务部门，继续加码天然气布局",
+      "body": "消息称沙特阿美计划重组业务架构，新设天然气部门，覆盖国内外天然气及LNG开发，并可能探索引入外部资本。",
+      "source": "路透",
+      "commentary_label": "投研拆解",
+      "chain": [
+        {
+          "text": "新设天然气业务部门",
+          "tone": "neutral"
+        },
+        {
+          "text": "天然气业务独立化",
+          "tone": "neutral"
+        },
+        {
+          "text": "关键变化：投资与融资资源有望向天然气业务进一步集中",
+          "tone": "key",
+          "annotation": "进一步集中"
+        },
+        {
+          "text": "天然气与LNG项目推进预期升温",
+          "tone": "up"
+        },
+        {
+          "text": "产业链资本开支预期改善",
+          "tone": "up"
+        },
+        {
+          "text": "利好天然气/LNG",
+          "tone": "up"
+        }
+      ],
+      "research_note": {
+        "label": "继续观察：",
+        "text": "后续资本投入规模与具体项目落地"
+      }
+    },
+    {
+      "time": "昨夜",
+      "category": "商品",
+      "status": "风险升温",
+      "impact": {
+        "direction": "bad",
+        "label": "利空",
+        "sector": "黄金"
+      },
+      "title": "美元走强叠加加息预期升温，黄金价格回落",
+      "body": "现货黄金出现回落，美元走强以及市场对美联储进一步加息的预期上升，削弱了无息资产的相对吸引力。",
+      "source": "汇通财经",
+      "commentary_label": "投研拆解",
+      "chain": [
+        {
+          "text": "美元走强",
+          "tone": "up"
+        },
+        {
+          "text": "加息预期升温",
+          "tone": "up"
+        },
+        {
+          "text": "黄金持有机会成本上升",
+          "tone": "up"
+        },
+        {
+          "text": "关键变化：贵金属定价重新受到利率与美元双重压制",
+          "tone": "key",
+          "annotation": "双重压制"
+        },
+        {
+          "text": "资金避险偏好不足以抵消利率压力",
+          "tone": "down"
+        },
+        {
+          "text": "利空黄金",
+          "tone": "down"
+        }
+      ],
+      "research_note": {
+        "label": "继续观察：",
+        "text": "美元和实际利率是否继续上行"
+      }
+    }
+  ]
+}

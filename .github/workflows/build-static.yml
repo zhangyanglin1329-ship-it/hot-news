@@ -1,0 +1,36 @@
+name: Build static site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/**"
+      - "template/**"
+      - "scripts/build.py"
+      - ".github/workflows/build-static.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build static HTML
+        run: python scripts/build.py
+      - name: Commit generated pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html archive/
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+          else
+            git commit -m "Build static pages"
+            git push
+          fi

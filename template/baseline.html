@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport"/>
+<title>热点宝｜30秒拆透一个财经热点</title>
+<style>
+:root{
+  --bg:#f5f6f8;
+  --surface:#fff;
+  --text:#17191d;
+  --sub:#626872;
+  --muted:#969ca5;
+  --line:#eceef1;
+  --warm-line:#e7dfd5;
+  --red:#d94b45;
+  --green:#2f9b68;
+  --chain:#4b5159;
+  --arrow:#a0a5ac;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+.app{
+  width:min(100%,430px);
+  min-height:100vh;
+  margin:0 auto;
+  background:var(--surface);
+}
+.header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  padding:13px 16px 11px;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand-name{font-size:19px;font-weight:700;line-height:1}
+.brand-tagline{font-size:11px;color:var(--muted)}
+.story{
+  padding:17px 16px 18px;
+  border-bottom:8px solid var(--bg);
+}
+.meta{
+  display:flex;
+  align-items:center;
+  min-height:22px;
+  margin-bottom:8px;
+}
+.meta-left{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:#8b9199;
+  font-size:11px;
+  line-height:1;
+  white-space:nowrap;
+}
+.meta-sep{color:#c1c5ca}
+.meta-type{color:#737982}
+.meta-result{
+  margin-left:auto;
+  display:inline-flex;
+  align-items:center;
+  min-height:22px;
+  padding:0 8px;
+  border-radius:3px;
+  color:#fff;
+  font-size:11px;
+  font-weight:600;
+  line-height:22px;
+  white-space:nowrap;
+}
+.meta-result.good{background:var(--red)}
+.meta-result.bad{background:var(--green)}
+
+.headline{
+  font-size:16px;
+  line-height:1.52;
+  font-weight:650;
+  letter-spacing:-.08px;
+}
+
+/* 新闻正文：<=2行完整展示；>2行时第二行右侧“查看更多”真实占位 */
+.news-body-wrap{margin-top:8px}
+.news-body-full{
+  color:var(--sub);
+  font-size:13px;
+  line-height:21px;
+}
+.news-preview{display:none}
+.news-row{
+  height:21px;
+  line-height:21px;
+  white-space:nowrap;
+  overflow:hidden;
+  color:var(--sub);
+  font-size:13px;
+}
+.news-row2{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  column-gap:7px;
+  align-items:center;
+}
+.news-row2-text{
+  min-width:0;
+  height:21px;
+  line-height:21px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.news-more{
+  border:0;
+  padding:0;
+  margin:0;
+  background:transparent;
+  color:#737a83;
+  font-size:12px;
+  line-height:21px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.news-collapse{
+  display:none;
+  margin-top:3px;
+  border:0;
+  padding:0;
+  background:transparent;
+  color:#858b93;
+  font-size:11px;
+  cursor:pointer;
+}
+
+/* 投研拆解：当前有效视觉 */
+.commentary{
+  margin-top:14px;
+  padding:2px 0 1px 11px;
+  border-left:2px solid var(--warm-line);
+}
+.commentary-label{
+  display:inline-flex;
+  width:max-content;
+  margin-bottom:8px;
+  padding:2px 6px 3px;
+  border:1px solid #d8c9b8;
+  border-radius:3px;
+  background:#fbf7f1;
+  color:#7b6248;
+  font-size:10.5px;
+  font-weight:650;
+  line-height:1.25;
+  letter-spacing:.04em;
+}
+
+/* 完整链条 */
+.chain-full{
+  color:var(--chain);
+  font-size:12.5px;
+  line-height:25px;
+}
+.chain-full .step{
+  display:inline;
+  white-space:normal;
+  font-weight:400;
+}
+.chain-full .step + .step::before{
+  content:"→";
+  color:var(--arrow);
+  padding:0 6px;
+}
+.direction-up{
+  color:#df4338 !important;
+  font-weight:400 !important;
+}
+.direction-down{
+  color:#1f8b58 !important;
+  font-weight:400 !important;
+}
+
+/* >2行时的严格两行预览 */
+.chain-preview{
+  display:none;
+  width:100%;
+  color:var(--chain);
+  font-size:12.5px;
+  line-height:25px;
+}
+.chain-row{
+  width:100%;
+  height:25px;
+  line-height:25px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.chain-row2{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  column-gap:8px;
+  align-items:center;
+}
+.chain-row2-text{
+  min-width:0;
+  height:25px;
+  line-height:25px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+.preview-step{font-weight:400}
+.preview-arrow{
+  color:var(--arrow);
+  padding:0 6px;
+}
+.chain-more{
+  border:0;
+  padding:0;
+  margin:0;
+  background:transparent;
+  color:#7d848c;
+  font-size:11px;
+  line-height:25px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.chain-collapse{
+  display:none;
+  margin-top:4px;
+  border:0;
+  padding:0;
+  background:transparent;
+  color:#858b93;
+  font-size:11px;
+  cursor:pointer;
+}
+
+/* 隐藏测量器 */
+.measure{
+  position:absolute !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+  white-space:nowrap !important;
+}
+
+/* V4：新闻改为“标题+正文”一体化快讯，最多3行 */
+.headline,
+.news-body-wrap{
+  display:none !important;
+}
+
+.quick-news{
+  margin-top:2px;
+  color:var(--sub);
+  font-size:14px;
+  line-height:22px;
+}
+
+.quick-news-full{
+  display:block;
+}
+
+.quick-news-title{
+  color:var(--text);
+  font-weight:650;
+}
+
+.quick-news-preview{
+  display:none;
+}
+
+.quick-news-row{
+  width:100%;
+  height:22px;
+  line-height:22px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+.quick-news-row3{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  column-gap:7px;
+  align-items:center;
+}
+
+.quick-news-row3-text{
+  min-width:0;
+  height:22px;
+  line-height:22px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+.quick-news-preview .q-title{
+  color:var(--text);
+  font-weight:650;
+}
+
+.quick-news-preview .q-body{
+  color:var(--sub);
+  font-weight:400;
+}
+
+.quick-news-more{
+  border:0;
+  padding:0;
+  margin:0;
+  background:transparent;
+  color:#737a83;
+  font-size:12px;
+  line-height:22px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+/* 展开入口：只增加极轻的向下引导，不改变按钮形态 */
+.quick-news-more::after,
+.chain-more::after{
+  content:"";
+  display:inline-block;
+  width:4px;
+  height:4px;
+  margin-left:4px;
+  border-right:1px solid #a8adb3;
+  border-bottom:1px solid #a8adb3;
+  transform:translateY(-2px) rotate(45deg);
+  vertical-align:middle;
+}
+
+.quick-news-collapse{
+  display:none;
+  margin-top:3px;
+  border:0;
+  padding:0;
+  background:transparent;
+  color:#858b93;
+  font-size:11px;
+  cursor:pointer;
+}
+
+/* Top meta refinement：仅顶部元信息行 */
+.meta{
+  display:flex;
+  align-items:center;
+  min-height:22px;
+  margin-bottom:8px;
+}
+
+.meta-left{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:0;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  color:#7f858d;
+  font-size:11px;
+  font-weight:400;
+  line-height:20px;
+  white-space:nowrap;
+}
+
+.meta-left > span:first-child{
+  color:#c94d46;
+  font-weight:600;
+}
+
+.meta-left .meta-sep{
+  color:#c5c9ce;
+}
+
+.meta-left .meta-type{
+  color:#7f858d;
+  font-weight:400;
+}
+
+.meta-result{
+  margin-left:auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:20px;
+  padding:0 7px;
+  border-radius:2px;
+  font-size:10.5px;
+  font-weight:600;
+  line-height:20px;
+  white-space:nowrap;
+  box-shadow:none;
+}
+
+.meta-result.good{
+  background:#d94b45;
+  color:#fff;
+}
+
+.meta-result.bad{
+  background:#2f9b68;
+  color:#fff;
+}
+
+
+/* =========================================================
+   VNext 5｜真实小程序页面壳
+   仅处理整页框架；story DOM / 内容 / 交互完全不改
+   ========================================================= */
+html,body{
+  margin:0;
+  min-height:100%;
+  background:#f3f4f6;
+}
+body{
+  overscroll-behavior-y:none;
+  -webkit-font-smoothing:antialiased;
+}
+.app{
+  width:min(100%,430px);
+  min-height:100vh;
+  margin:0 auto;
+  background:#f3f4f6;
+}
+
+/* 原内容页品牌头隐藏：热点宝只在系统标题栏出现一次 */
+.header{display:none!important;}
+
+/* 小程序系统标题栏 */
+.wx-nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  height:48px;
+  background:rgba(255,255,255,.98);
+  border-bottom:1px solid #eceef1;
+  backdrop-filter:blur(12px);
+}
+.wx-nav-inner{
+  position:relative;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.wx-title{
+  color:#16181c;
+  font-size:17px;
+  line-height:1;
+  font-weight:650;
+  letter-spacing:-.1px;
+}
+.wx-capsule{
+  position:absolute;
+  top:9px;
+  right:9px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  padding:0 9px;
+  border:1px solid #dfe1e4;
+  border-radius:16px;
+  background:#fff;
+  color:#4d5259;
+}
+.wx-more{
+  font-size:15px;
+  line-height:1;
+  letter-spacing:1px;
+  transform:translateY(-2px);
+}
+.wx-capsule-divider{
+  width:1px;
+  height:14px;
+  margin:0 8px;
+  background:#e4e6e8;
+}
+.wx-close{
+  position:relative;
+  width:15px;
+  height:15px;
+  border:1.4px solid #565b62;
+  border-radius:50%;
+}
+.wx-close::after{
+  content:"";
+  position:absolute;
+  width:4px;
+  height:4px;
+  left:4px;
+  top:4px;
+  border-radius:50%;
+  background:#565b62;
+}
+
+/* 唯一的页面状态行：强调这是实时产品 */
+.live-bar{
+  position:sticky;
+  top:48px;
+  z-index:40;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:38px;
+  padding:0 15px;
+  background:rgba(250,250,251,.97);
+  border-bottom:1px solid #e9ebee;
+  backdrop-filter:blur(10px);
+}
+.live-left{
+  display:flex;
+  align-items:center;
+  min-width:0;
+}
+.live-pulse{
+  position:relative;
+  width:6px;
+  height:6px;
+  margin-right:8px;
+  border-radius:50%;
+  background:#d84b44;
+}
+.live-pulse::after{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border:1px solid rgba(216,75,68,.16);
+  border-radius:50%;
+}
+.live-clock{
+  color:#30343a;
+  font-size:12px;
+  line-height:1;
+  font-weight:650;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.04em;
+}
+.live-word{
+  margin-left:7px;
+  color:#8f959d;
+  font-size:10.5px;
+  line-height:1;
+}
+.live-right{
+  color:#8f959d;
+  font-size:10.5px;
+  line-height:1;
+}
+
+/* 主体是真正的连续信息流画布，不再是白色文档 */
+main{
+  display:block;
+  padding:8px 0 34px!important;
+  background:#f3f4f6;
+}
+.story{
+  margin:0 0 8px!important;
+  padding:14px 15px 16px!important;
+  background:#fff!important;
+  border:0!important;
+  border-top:1px solid #eceef1!important;
+  border-bottom:1px solid #e7e9ec!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+.story:last-child{
+  margin-bottom:0!important;
+}
+
+/* 页面底部只保留产品画布，不增加任何文案/模块 */
+.feed-tail{
+  height:54px;
+  background:#f3f4f6;
+}
+
+/* 桌面预览时才显示设备边界；移动端就是满屏 */
+@media (min-width:431px){
+  .app{
+    box-shadow:0 0 0 1px rgba(20,24,30,.035),0 14px 42px rgba(20,24,30,.08);
+  }
+}
+
+
+/* VNext6：6条完整信息流，保留现有结构，仅优化连续滚动节奏 */
+.story{
+  margin-bottom:8px !important;
+}
+.story:last-of-type{
+  margin-bottom:0 !important;
+}
+.live-right{
+  color:#676d75;
+  font-weight:500;
+}
+
+/* =========================================================
+   VNext7｜红队后 6 项精修
+   其余结构、内容、交互全部锁定
+   ========================================================= */
+
+/* 1. 新闻模块边界：只保留灰色间隔，不叠加上下细边线 */
+.story{
+  border:0 !important;
+}
+
+/* 2. 投研拆解：去掉米黄色胶囊，保留淡暖色左竖线 + 纯文字栏目名 */
+.commentary{
+  margin-top:16px;
+  padding:2px 0 1px 11px;
+  border-left:2px solid var(--warm-line);
+}
+.commentary-label{
+  display:block;
+  width:max-content;
+  margin:0 0 8px;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#66513e;
+  font-size:11.5px;
+  font-weight:600;
+  line-height:16px;
+  letter-spacing:.03em;
+}
+
+/* 3. 拆解链：略放大正文，收紧箭头横向占位 */
+.chain-full,
+.chain-preview{
+  font-size:13px;
+}
+.chain-full .step + .step::before{
+  padding:0 4px;
+}
+.preview-arrow{
+  padding:0 4px;
+}
+
+/* 4. 查看完整：只增强文字入口识别，不改按钮形态 */
+.chain-more{
+  color:#626971;
+  font-size:11.5px;
+  font-weight:500;
+}
+
+/* 5. 新闻正文略加深；标题保持原层级 */
+.quick-news{
+  color:#555b63;
+}
+.quick-news-preview .q-body{
+  color:#555b63;
+}
+
+/* 6A. 单条新闻右上结果标签收轻 */
+.meta-result{
+  min-height:19px;
+  padding:0 6px;
+  font-size:10px;
+  line-height:19px;
+}
+
+/* 6B. 顶部状态条：时间继续实时跳动，只突出更新数量里的数字 */
+.live-clock{
+  font-size:12.5px;
+  font-weight:650;
+}
+.live-word{
+  color:#8b9199;
+}
+.live-right{
+  color:#8b9199;
+  font-weight:400;
+}
+.live-count{
+  color:#4f555d;
+  font-weight:650;
+  font-variant-numeric:tabular-nums;
+}
+
+
+/* =========================================================
+   VNext8｜P0：会员权益感 + 专业投研身份
+   只修改影响链标题区；链条、新闻、页面其余位置全部锁定
+   ========================================================= */
+.member-benefit{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin:0 0 5px;
+  font-size:10px;
+  line-height:15px;
+}
+.member-mark{
+  color:#a77b3f;
+  font-size:8px;
+  line-height:1;
+  transform:translateY(-.5px);
+}
+.member-benefit-label{
+  color:#846131;
+  font-weight:650;
+  letter-spacing:.02em;
+}
+.member-free{
+  display:inline-flex;
+  align-items:center;
+  height:16px;
+  padding:0 5px;
+  border:1px solid #e7d7bd;
+  border-radius:2px;
+  background:#fbf7ef;
+  color:#98713d;
+  font-size:9.5px;
+  font-weight:550;
+  line-height:14px;
+}
+.commentary-label{
+  margin-bottom:8px;
+  color:#463b31;
+  font-size:11.75px;
+  font-weight:650;
+  letter-spacing:.02em;
+}
+
+
+/* VNext8.1｜仅收轻会员/投研标题 */
+.member-benefit{
+  display:none !important;
+}
+
+.commentary-label.benefit-inline{
+  display:flex;
+  align-items:center;
+  width:max-content;
+  gap:5px;
+  margin:0 0 8px;
+  padding:0;
+  background:transparent;
+  border:0;
+  color:#66513e;
+  font-size:11px;
+  font-weight:600;
+  line-height:16px;
+  letter-spacing:.02em;
+}
+
+.benefit-v{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:12px;
+  height:12px;
+  flex:0 0 12px;
+  border:1px solid #b08a58;
+  border-radius:50%;
+  color:#9b7442;
+  font-size:7.5px;
+  font-weight:700;
+  line-height:1;
+}
+
+
+/* =========================================================
+   VNext9｜今日重点首页逻辑
+   仅改：顶部、事件排序、入选原因、必要状态
+   其余卡片结构与交互全部锁定
+   ========================================================= */
+.live-bar{
+  height:36px;
+}
+.daily-focus-left{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+  font-size:11px;
+  line-height:18px;
+}
+.daily-date{
+  color:#555b63;
+  font-weight:600;
+}
+.daily-sep{
+  color:#b2b7bd;
+}
+.daily-focus{
+  color:#262a30;
+  font-weight:650;
+}
+.daily-count{
+  color:#8a9098;
+  font-size:10.5px;
+  white-space:nowrap;
+}
+.daily-count strong{
+  color:#4f555d;
+  font-size:11px;
+  font-weight:650;
+  font-variant-numeric:tabular-nums;
+}
+
+.event-status{
+  margin-left:2px;
+  padding-left:7px;
+  position:relative;
+  color:#8a6a49;
+  font-size:9.5px;
+  font-weight:550;
+  line-height:18px;
+  white-space:nowrap;
+}
+.event-status::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:50%;
+  width:3px;
+  height:3px;
+  margin-top:-1.5px;
+  border-radius:50%;
+  background:#ad8760;
+}
+
+
+/* =========================================================
+   VNext9.2｜去机器感：栏目化 + 编辑选择感
+   只改顶部、状态显示策略、投研身份重复方式
+   新闻正文、影响链、交互全部锁定
+   ========================================================= */
+
+/* 顶部改为“本期内容”而非“系统运行状态” */
+.edition-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 14px 10px;
+  background:#fff;
+  border-bottom:1px solid #eceef1;
+}
+.edition-left{
+  min-width:0;
+}
+.edition-title{
+  color:#20242a;
+  font-size:14px;
+  font-weight:680;
+  line-height:19px;
+  letter-spacing:.01em;
+}
+.edition-meta{
+  margin-top:2px;
+  color:#8a9098;
+  font-size:10.5px;
+  line-height:16px;
+}
+.edition-note{
+  flex:0 0 auto;
+  padding-bottom:1px;
+  color:#9a8a78;
+  font-size:10px;
+  line-height:16px;
+  white-space:nowrap;
+}
+
+/* 状态是“编辑判断”，不是必填数据库字段 */
+.event-status{
+  color:#80664d;
+}
+.event-status::before{
+  background:#a88664;
+}
+
+/* 投研身份只在首条完整提示，后续保持轻量简称 */
+.commentary-label.benefit-inline{
+  color:#6a5948;
+  font-size:10.75px;
+  font-weight:600;
+}
+.benefit-v{
+  opacity:.88;
+}
+
+/* =========================================================
+   VNext9.3｜本期导读
+   仅修改顶部栏目头，增强编辑判断感
+   其余全部锁定
+   ========================================================= */
+
+.edition-head{
+  display:block;
+  padding:11px 14px 10px;
+}
+
+.edition-left{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.edition-title{
+  flex:0 0 auto;
+}
+
+.edition-meta{
+  margin-top:0;
+  text-align:right;
+  white-space:nowrap;
+}
+
+.edition-intro{
+  display:flex;
+  align-items:flex-start;
+  gap:7px;
+  margin-top:7px;
+  padding-top:7px;
+  border-top:1px solid #f0f1f2;
+  font-size:10.75px;
+  line-height:17px;
+}
+
+.edition-intro-label{
+  flex:0 0 auto;
+  color:#705c48;
+  font-weight:650;
+}
+
+.edition-intro-text{
+  color:#626871;
+  font-weight:400;
+}
+
+/* =========================================================
+   VNext9.4｜近期重点 + 深度展开
+   只改：顶部时效表达、单条时间语义、完整影响链内容
+   其他全部锁定
+   ========================================================= */
+
+/* 单条左上角从“快讯时间”降级为“事件时效提示” */
+.meta-left > span:first-child{
+  color:#8c9299;
+  font-size:10.5px;
+  font-weight:500;
+}
+
+/* 展开后的完整链路允许承载更深判断，但保持同一条连续链 */
+.chain-full{
+  line-height:26px;
+}
+
+/* VNext9.5：默认两行不变；完整链路展开后改为竖向 */
+.chain-wrap.is-expanded .chain-full{
+  display:flex !important;
+  flex-direction:column;
+  align-items:stretch;
+  gap:0;
+  padding:2px 0 1px;
+  line-height:20px;
+}
+
+.chain-wrap.is-expanded .chain-full .step{
+  position:relative;
+  display:block;
+  width:100%;
+  padding:5px 0 5px 18px;
+  line-height:20px;
+  white-space:normal;
+}
+
+/* 展开态取消原横向箭头 */
+.chain-wrap.is-expanded .chain-full .step + .step::before{
+  content:"";
+  padding:0;
+}
+
+/* 左侧节点 */
+.chain-wrap.is-expanded .chain-full .step::before{
+  content:"";
+  position:absolute;
+  left:3px;
+  top:12px;
+  width:6px;
+  height:6px;
+  border:1.5px solid #a9afb6;
+  border-radius:50%;
+  background:#fff;
+  box-sizing:border-box;
+}
+
+/* 节点之间的竖向传导线 */
+.chain-wrap.is-expanded .chain-full .step:not(:last-child)::after{
+  content:"";
+  position:absolute;  left:5.5px;
+  top:19px;
+  bottom:-6px;
+  width:1px;
+  background:#d9dde1;
+}
+
+/* 保留原来的红绿“批注感” */
+.chain-wrap.is-expanded .chain-full .step.direction-up::before{
+  border-color:#dc433a;
+}
+.chain-wrap.is-expanded .chain-full .step.direction-down::before{
+  border-color:#23875a;
+}
+
+.chain-wrap.is-expanded .chain-collapse{
+  margin-top:7px;
+}
+
+
+/* =========================================================
+   VNext9.5.2｜影响链视觉规则 V1.0
+   基于 V9.5.1 止损版，仅修正完整链路展开态：
+   1/2 原逻辑完全保留；仅补 3/4/5/6
+   ========================================================= */
+
+/* 规则4：关键变化使用第三色，不占用红/绿方向语义 */
+.chain-full .step.key-change{
+  color:#8f6538 !important;
+  font-weight:500 !important;
+}
+
+/* 规则5：只给核心短语做很轻的“人工批注” */
+.key-annotation{
+  color:#845b2e;
+  text-decoration-line:underline;
+  text-decoration-style:dotted;
+  text-decoration-color:#c69d6d;
+  text-decoration-thickness:1.3px;
+  text-underline-offset:4px;
+}
+
+/* 完整态：不做 Timeline 组件，改成逐层研究推演 */
+.chain-wrap.is-expanded .chain-full{
+  display:flex !important;
+  flex-direction:column;
+  align-items:stretch;
+  gap:0;
+  padding:2px 0 0;
+  line-height:23px;
+}
+
+.chain-wrap.is-expanded .chain-full .step{
+  position:relative;
+  display:block;
+  width:100%;
+  padding:2px 0;
+  line-height:23px;
+  white-space:normal;
+}
+
+/* 完整链路最终结果：仅用字重 + 轻微上方留白形成“落笔感”，不新增颜色/装饰 */
+.chain-wrap.is-expanded .chain-full .step:last-child{
+  margin-top:2px;
+  font-weight:600 !important;
+}
+
+/* 覆盖 V9.5 的圆点 + 竖线；避免“流程图 / Timeline”感 */
+.chain-wrap.is-expanded .chain-full .step::before{
+  content:none !important;
+  display:none !important;
+}
+.chain-wrap.is-expanded .chain-full .step + .step::before{
+  content:none !important;
+}
+.chain-wrap.is-expanded .chain-full .step:not(:last-child)::after{
+  content:"↓" !important;
+  position:static !important;
+  display:block;
+  width:auto !important;
+  height:auto !important;
+  margin:1px 0 1px 2px;
+  padding:0;
+  background:none !important;
+  color:#aeb3b9;
+  font-size:11px;
+  line-height:12px;
+}
+
+/* 规则6：研究备注退出因果链，只在完整态出现 */
+.chain-research-note{
+  display:none;
+}
+.chain-wrap.is-expanded .chain-research-note{
+  display:block;
+  margin:8px 0 1px;
+  padding-top:7px;
+  border-top:1px dashed #e6dfd6;
+  color:#767d85;
+  font-size:10.75px;
+  line-height:17px;
+}
+.chain-note-label{
+  color:#79624b;
+  font-weight:600;
+}
+.chain-note-text{
+  color:#767d85;
+}
+
+/* 收起入口仍沿用原位置与样式 */
+.chain-wrap.is-expanded .chain-collapse{
+  margin-top:7px;
+}
+
+/* =========================================================
+   VNext9.5.3｜两个局部视觉精修
+   仅修改：
+   A. 顶部栏目头（今日重点 / 日期数量 / 本期导读）
+   B. 单条元信息行（今晨 / 分类 / 状态 / 右侧结果）
+   其他区域全部锁定
+   ========================================================= */
+
+/* ---------- A. 顶部栏目头 ---------- */
+.edition-head{
+  position:relative;
+  display:block;
+  padding:14px 15px 13px;
+  background:#fff;
+  border-bottom:0;
+}
+
+.edition-left{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:14px;
+  min-width:0;
+}
+
+.edition-title{
+  flex:0 0 auto;
+  color:#20242a;
+  font-size:15px;
+  font-weight:680;
+  line-height:20px;
+  letter-spacing:0;
+}
+
+.edition-meta{
+  margin-top:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:4px;
+  color:#9a9fa6;
+  font-size:10px;
+  font-weight:400;
+  line-height:16px;
+  text-align:right;
+  white-space:nowrap;
+}
+
+/* 近7天往期入口：只让日期承担切换入口，数量信息保持原层级 */
+.edition-date-trigger{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#8d939a;
+  font:inherit;
+  line-height:16px;
+  cursor:pointer;
+}
+.edition-date-trigger::after{
+  content:"";
+  width:4px;
+  height:4px;
+  border-right:1px solid #adb2b8;
+  border-bottom:1px solid #adb2b8;
+  transform:translateY(-1px) rotate(45deg);
+}
+.edition-date-trigger[aria-expanded="true"]::after{
+  transform:translateY(1px) rotate(225deg);
+}
+.edition-count{color:#9a9fa6}
+
+.edition-history-panel{
+  position:absolute;
+  top:38px;
+  right:15px;
+  z-index:45;
+  display:none;
+  width:154px;
+  padding:5px 0 6px;
+  border:1px solid #eceef1;
+  border-radius:6px;
+  background:#fff;
+  box-shadow:0 10px 26px rgba(26,30,36,.10);
+}
+.edition-history-panel.is-open{display:block}
+.edition-history-label{
+  padding:4px 12px 5px;
+  color:#a0a5ac;
+  font-size:9.5px;
+  line-height:15px;
+}
+.edition-history-item{
+  width:100%;
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 12px;
+  border:0;
+  background:transparent;
+  color:#555b63;
+  font-size:11px;
+  line-height:32px;
+  text-align:left;
+  cursor:pointer;
+}
+.edition-history-item:active{background:#f6f7f8}
+.edition-history-item:disabled{
+  opacity:.42;
+  cursor:default;
+}
+.edition-history-item:disabled:active{background:transparent}
+
+.edition-history-item.is-current{
+  color:#24282e;
+  font-weight:600;
+}
+.edition-history-current{
+  color:#9a9fa6;
+  font-size:9.5px;
+  font-weight:400;
+}
+
+/* 不再用横线硬切“本期导读”，改用留白形成层级 */
+.edition-intro{
+  display:block;
+  margin-top:10px;
+  padding-top:0;
+  border-top:0;
+  font-size:10.75px;
+  line-height:17.5px;
+}
+
+.edition-intro-label{
+  display:inline;
+  margin-right:6px;
+  color:#747a82;
+  font-weight:600;
+}
+
+.edition-intro-text{
+  display:inline;
+  color:#5f656d;
+  font-weight:400;
+}
+
+/* ---------- B. 单条元信息行 ---------- */
+/* 左侧所有元信息统一成同一级中性色，不再越往右越重 */
+.meta-left{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:#858b93;
+  font-size:10.5px;
+  font-weight:500;
+  line-height:1;
+  white-space:nowrap;
+}
+
+.meta-left > span:first-child,
+.meta-type,
+.event-status{
+  color:#858b93 !important;
+  font-size:10.5px;
+  font-weight:500;
+}
+
+.meta-sep{
+  color:#c4c8cd;
+}
+
+/* 状态仍保留语义，但不再使用独立颜色/圆点抢视觉 */
+.event-status{
+  margin-left:0;
+  padding-left:0;
+  position:static;
+  line-height:1;
+}
+
+.event-status::before{
+  content:none !important;
+  display:none !important;
+}
+
+/* 右侧影响结果继续作为这一行唯一强视觉点 */
+.meta-result{
+  margin-left:auto;
+}
+
+/* =========================================================
+   C6｜仅两项局部修正
+   1. 新闻类别与状态之间增加“·”分隔
+   2. 新闻来源作为正文末尾内容参与3行计算
+   其余全部锁定
+   ========================================================= */
+</style>
+</head>
+<body>
+<div class="app">
+<header aria-label="小程序标题栏" class="wx-nav">
+<div class="wx-nav-inner">
+<div class="wx-title">热点宝</div>
+<div aria-hidden="true" class="wx-capsule">
+<span class="wx-more">•••</span>
+<span class="wx-capsule-divider"></span>
+<span class="wx-close"></span>
+</div>
+</div>
+</header>
+<div class="edition-head"><div class="edition-left"><div class="edition-title">今日重点</div><div class="edition-meta"><button aria-expanded="false" aria-haspopup="true" class="edition-date-trigger" type="button">9月25日</button><span class="edition-count">· 精选 7 个近期重要事件</span></div></div><div class="edition-intro"><span class="edition-intro-label">本期导读</span><span class="edition-intro-text">今天重点看七个变化：货币政策继续保持适度宽松；AI算力大额采购继续落地；太空数据中心进入在轨验证；DRAM供应链新增专利调查风险；晶圆代工涨价预期延续；轻稀土价格保持强势；国际油价重回100美元上方。</span></div><div aria-label="最近7天往期" class="edition-history-panel"><div class="edition-history-label">最近7天</div><button class="edition-history-item is-current" data-date="2026-09-25" type="button"><span>9月25日</span><span class="edition-history-current">今日</span></button><button class="edition-history-item" data-date="2026-09-24" type="button"><span>9月24日</span></button><button class="edition-history-item" data-date="2026-09-23" type="button"><span>9月23日</span></button><button class="edition-history-item" data-date="2026-09-22" type="button" disabled aria-disabled="true"><span>9月22日</span></button><button class="edition-history-item" data-date="2026-09-21" type="button" disabled aria-disabled="true"><span>9月21日</span></button><button class="edition-history-item" data-date="2026-09-20" type="button" disabled aria-disabled="true"><span>9月20日</span></button><button class="edition-history-item" data-date="2026-09-19" type="button" disabled aria-disabled="true"><span>9月19日</span></button></div></div>
+<main>
+<article class="story"><div class="meta"><div class="meta-left"><span>昨夜</span><span class="meta-sep">·</span><span class="meta-type">宏观</span><span class="meta-sep">·</span><span class="event-status">预期变化</span></div><div class="meta-result good">利好 · 证券</div></div><div class="quick-news" data-body="人民银行披露2026年第三季度货币政策委员会例会内容，提出继续实施适度宽松的货币政策、加大逆周期调节力度，并强调综合运用并适时调整货币政策工具，保持流动性充裕。（来源：每日经济新闻）" data-title="央行三季度例会：继续实施适度宽松货币政策，保持流动性充裕"><div class="quick-news-full"><span class="quick-news-title">【央行三季度例会：继续实施适度宽松货币政策，保持流动性充裕】</span><span>人民银行披露2026年第三季度货币政策委员会例会内容，提出继续实施适度宽松的货币政策、加大逆周期调节力度，并强调综合运用并适时调整货币政策工具，保持流动性充裕。（来源：每日经济新闻）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>会员限免 · 投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step">适度宽松货币政策继续实施</span><span class="step direction-up">政策工具使用空间保持灵活</span><span class="step direction-up">市场流动性预期获得支撑</span><span class="step key-change">关键变化：货币政策工具从观察窗口重新转向<span class="key-annotation">灵活调节</span></span><span class="step direction-up">交易活跃度与风险偏好改善空间提升</span><span class="step direction-up">利好证券</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">后续降准、利率及公开市场操作是否出现更明确的增量动作</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>今晨</span><span class="meta-sep">·</span><span class="meta-type">海外</span><span class="meta-sep">·</span><span class="event-status">关键确认</span></div><div class="meta-result good">利好 · 算力租赁</div></div><div class="quick-news" data-body="Anthropic与Akamai达成价值120亿美元的人工智能算力交易，Akamai盘后股价一度大涨。大额长期算力采购继续验证头部模型厂商对外部计算资源的旺盛需求。（来源：财联社）" data-title="Anthropic与Akamai达成120亿美元AI算力交易"><div class="quick-news-full"><span class="quick-news-title">【Anthropic与Akamai达成120亿美元AI算力交易】</span><span>Anthropic与Akamai达成价值120亿美元的人工智能算力交易，Akamai盘后股价一度大涨。大额长期算力采购继续验证头部模型厂商对外部计算资源的旺盛需求。（来源：财联社）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">Anthropic签下120亿美元算力交易</span><span class="step direction-up">头部模型厂商继续锁定外部计算资源</span><span class="step direction-up">云端GPU与数据中心容量需求进一步提升</span><span class="step key-change">关键变化：AI算力采购从扩容预期继续转化为<span class="key-annotation">大额长期合同</span></span><span class="step direction-up">算力服务商订单能见度与利用率预期改善</span><span class="step direction-up">利好算力租赁</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">合同具体交付周期、算力来源以及资本开支兑现节奏</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>今晨</span><span class="meta-sep">·</span><span class="meta-type">海外</span><span class="meta-sep">·</span><span class="event-status">新变量</span></div><div class="meta-result good">利好 · 商业航天</div></div><div class="quick-news" data-body="谷歌宣布将在下周发射一颗搭载4颗自研TPU的原型卫星，测试AI芯片在发射振动、辐射和太空散热环境下的可靠性；公司计划2027年进一步测试双星激光互联。（来源：财联社）" data-title="谷歌下周将把TPU送入太空，启动太空数据中心首次在轨验证"><div class="quick-news-full"><span class="quick-news-title">【谷歌下周将把TPU送入太空，启动太空数据中心首次在轨验证】</span><span>谷歌宣布将在下周发射一颗搭载4颗自研TPU的原型卫星，测试AI芯片在发射振动、辐射和太空散热环境下的可靠性；公司计划2027年进一步测试双星激光互联。（来源：财联社）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step">谷歌启动太空数据中心在轨验证</span><span class="step direction-up">TPU首次进入卫星真实运行环境</span><span class="step">验证高算力载荷在轨运行与散热能力</span><span class="step key-change">关键变化：太空算力从概念方案进入<span class="key-annotation">真实硬件验证</span>阶段</span><span class="step direction-up">卫星平台、激光互联与在轨算力基础设施需求预期升温</span><span class="step direction-up">利好商业航天</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">这里的变量是：</span><span class="chain-note-text">当前仍处原型验证阶段，规模化部署尚需多年，后续要看在轨测试结果与双星互联进度</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>昨日</span><span class="meta-sep">·</span><span class="meta-type">海外</span><span class="meta-sep">·</span><span class="event-status">风险升温</span></div><div class="meta-result bad">利空 · 存储芯片</div></div><div class="quick-news" data-body="美国国际贸易委员会正式启动针对特定DRAM设备及其下游产品和组件的337调查，申请方Netlist指控相关产品侵犯专利，并请求有限排除令和禁止令；美光、联想、HPE、Super Micro等被列为被告。ITC目前尚未对案件实体作出裁决。（来源：美国ITC）" data-title="美国ITC启动新一轮DRAM 337调查，美光、联想等被列为被告"><div class="quick-news-full"><span class="quick-news-title">【美国ITC启动新一轮DRAM 337调查，美光、联想等被列为被告】</span><span>美国国际贸易委员会正式启动针对特定DRAM设备及其下游产品和组件的337调查，申请方Netlist指控相关产品侵犯专利，并请求有限排除令和禁止令；美光、联想、HPE、Super Micro等被列为被告。ITC目前尚未对案件实体作出裁决。（来源：美国ITC）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step">美国ITC启动DRAM 337调查</span><span class="step direction-down">美光及多家下游厂商进入专利争议程序</span><span class="step direction-down">相关DRAM产品对美销售与供应存在潜在限制风险</span><span class="step key-change">关键变化：存储产业链风险从专利诉讼进一步延伸至<span class="key-annotation">进口排除程序</span></span><span class="step direction-down">供应链合规与客户采购不确定性上升</span><span class="step direction-down">利空存储芯片</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">调查尚处立案阶段，需关注目标完成日期、专利有效性判断及是否最终发布排除令</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>昨日</span><span class="meta-sep">·</span><span class="meta-type">产业</span><span class="meta-sep">·</span><span class="event-status">预期变化</span></div><div class="meta-result good">利好 · 半导体</div></div><div class="quick-news" data-body="供应链消息称，台积电预计自2027年1月起按制程及产品调整晶圆代工价格，涨幅约3%至6%，其中2纳米、3纳米等先进制程涨幅较高。台积电表示不评论价格问题，相关调价仍待后续确认。（来源：财联社）" data-title="台积电据报明年上调晶圆代工价格，先进制程涨幅更高"><div class="quick-news-full"><span class="quick-news-title">【台积电据报明年上调晶圆代工价格，先进制程涨幅更高】</span><span>供应链消息称，台积电预计自2027年1月起按制程及产品调整晶圆代工价格，涨幅约3%至6%，其中2纳米、3纳米等先进制程涨幅较高。台积电表示不评论价格问题，相关调价仍待后续确认。（来源：财联社）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">晶圆代工价格拟上调</span><span class="step">先进制程涨幅更高</span><span class="step direction-up">高端产能利用率与订单能见度预期保持强势</span><span class="step key-change">关键变化：产能紧张开始向<span class="key-annotation">晶圆代工定价权</span>传导</span><span class="step direction-up">代工环节盈利预期与产业景气度获得支撑</span><span class="step direction-up">利好半导体</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">这里的变量是：</span><span class="chain-note-text">目前仍为供应链消息，需继续确认实际调价范围、客户接受度和最终执行价格</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>昨日</span><span class="meta-sep">·</span><span class="meta-type">商品</span><span class="meta-sep">·</span><span class="event-status">持续影响</span></div><div class="meta-result good">利好 · 稀土</div></div><div class="quick-news" data-body="9月中旬以来镨钕系轻稀土价格明显走强。SMM数据显示，9月22日氧化镨钕单日上涨5000元/吨、镨钕金属上涨7500元/吨，9月23日虽小幅回调但仍处近期高位；产业人士称低价现货减少、上游报价坚挺是本轮上涨的重要原因。（来源：证券日报）" data-title="轻稀土价格维持强势，低价现货减少支撑上游报价"><div class="quick-news-full"><span class="quick-news-title">【轻稀土价格维持强势，低价现货减少支撑上游报价】</span><span>9月中旬以来镨钕系轻稀土价格明显走强。SMM数据显示，9月22日氧化镨钕单日上涨5000元/吨、镨钕金属上涨7500元/吨，9月23日虽小幅回调但仍处近期高位；产业人士称低价现货减少、上游报价坚挺是本轮上涨的重要原因。（来源：证券日报）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">轻稀土价格中枢抬升</span><span class="step direction-up">低价现货减少、上游报价坚挺</span><span class="step">资源端供需格局趋紧</span><span class="step key-change">关键变化：供给约束开始形成<span class="key-annotation">持续的价格支撑</span></span><span class="step direction-up">上游资源与冶炼环节盈利弹性提升</span><span class="step direction-up">利好稀土</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">价格强势能否延续，以及下游磁材企业对原料涨价的承接能力</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>今晨</span><span class="meta-sep">·</span><span class="meta-type">商品</span><span class="meta-sep">·</span><span class="event-status">风险升温</span></div><div class="meta-result good">利好 · 油气资源</div></div><div class="quick-news" data-body="隔夜国际油价集体上涨，美油主力合约涨约2.8%，布油主力合约涨约2.4%并重回100美元上方。市场对中东供应风险的担忧仍高，供应紧张削弱了部分缓和预期。（来源：每日经济新闻）" data-title="供应紧张推动国际油价继续上涨，布油重回100美元上方"><div class="quick-news-full"><span class="quick-news-title">【供应紧张推动国际油价继续上涨，布油重回100美元上方】</span><span>隔夜国际油价集体上涨，美油主力合约涨约2.8%，布油主力合约涨约2.4%并重回100美元上方。市场对中东供应风险的担忧仍高，供应紧张削弱了部分缓和预期。（来源：每日经济新闻）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">中东供应风险维持高位</span><span class="step direction-up">原油风险溢价重新走强</span><span class="step direction-up">布油重回100美元上方</span><span class="step key-change">关键变化：<span class="key-annotation">供应紧张</span>再次压过短期缓和预期</span><span class="step direction-up">上游油气资产盈利与资源价值预期获得支撑</span><span class="step direction-up">利好油气资源</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">中东局势与霍尔木兹海峡相关谈判进展可能使油价风险溢价快速反向波动</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<div aria-hidden="true" class="feed-tail"></div>
+</main>
+<template id="edition-template-2026-09-25">
+<article class="story"><div class="meta"><div class="meta-left"><span>昨夜</span><span class="meta-sep">·</span><span class="meta-type">宏观</span><span class="meta-sep">·</span><span class="event-status">预期变化</span></div><div class="meta-result good">利好 · 证券</div></div><div class="quick-news" data-body="人民银行披露2026年第三季度货币政策委员会例会内容，提出继续实施适度宽松的货币政策、加大逆周期调节力度，并强调综合运用并适时调整货币政策工具，保持流动性充裕。（来源：每日经济新闻）" data-title="央行三季度例会：继续实施适度宽松货币政策，保持流动性充裕"><div class="quick-news-full"><span class="quick-news-title">【央行三季度例会：继续实施适度宽松货币政策，保持流动性充裕】</span><span>人民银行披露2026年第三季度货币政策委员会例会内容，提出继续实施适度宽松的货币政策、加大逆周期调节力度，并强调综合运用并适时调整货币政策工具，保持流动性充裕。（来源：每日经济新闻）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>会员限免 · 投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step">适度宽松货币政策继续实施</span><span class="step direction-up">政策工具使用空间保持灵活</span><span class="step direction-up">市场流动性预期获得支撑</span><span class="step key-change">关键变化：货币政策工具从观察窗口重新转向<span class="key-annotation">灵活调节</span></span><span class="step direction-up">交易活跃度与风险偏好改善空间提升</span><span class="step direction-up">利好证券</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">后续降准、利率及公开市场操作是否出现更明确的增量动作</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>今晨</span><span class="meta-sep">·</span><span class="meta-type">海外</span><span class="meta-sep">·</span><span class="event-status">关键确认</span></div><div class="meta-result good">利好 · 算力租赁</div></div><div class="quick-news" data-body="Anthropic与Akamai达成价值120亿美元的人工智能算力交易，Akamai盘后股价一度大涨。大额长期算力采购继续验证头部模型厂商对外部计算资源的旺盛需求。（来源：财联社）" data-title="Anthropic与Akamai达成120亿美元AI算力交易"><div class="quick-news-full"><span class="quick-news-title">【Anthropic与Akamai达成120亿美元AI算力交易】</span><span>Anthropic与Akamai达成价值120亿美元的人工智能算力交易，Akamai盘后股价一度大涨。大额长期算力采购继续验证头部模型厂商对外部计算资源的旺盛需求。（来源：财联社）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">Anthropic签下120亿美元算力交易</span><span class="step direction-up">头部模型厂商继续锁定外部计算资源</span><span class="step direction-up">云端GPU与数据中心容量需求进一步提升</span><span class="step key-change">关键变化：AI算力采购从扩容预期继续转化为<span class="key-annotation">大额长期合同</span></span><span class="step direction-up">算力服务商订单能见度与利用率预期改善</span><span class="step direction-up">利好算力租赁</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">合同具体交付周期、算力来源以及资本开支兑现节奏</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>今晨</span><span class="meta-sep">·</span><span class="meta-type">海外</span><span class="meta-sep">·</span><span class="event-status">新变量</span></div><div class="meta-result good">利好 · 商业航天</div></div><div class="quick-news" data-body="谷歌宣布将在下周发射一颗搭载4颗自研TPU的原型卫星，测试AI芯片在发射振动、辐射和太空散热环境下的可靠性；公司计划2027年进一步测试双星激光互联。（来源：财联社）" data-title="谷歌下周将把TPU送入太空，启动太空数据中心首次在轨验证"><div class="quick-news-full"><span class="quick-news-title">【谷歌下周将把TPU送入太空，启动太空数据中心首次在轨验证】</span><span>谷歌宣布将在下周发射一颗搭载4颗自研TPU的原型卫星，测试AI芯片在发射振动、辐射和太空散热环境下的可靠性；公司计划2027年进一步测试双星激光互联。（来源：财联社）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step">谷歌启动太空数据中心在轨验证</span><span class="step direction-up">TPU首次进入卫星真实运行环境</span><span class="step">验证高算力载荷在轨运行与散热能力</span><span class="step key-change">关键变化：太空算力从概念方案进入<span class="key-annotation">真实硬件验证</span>阶段</span><span class="step direction-up">卫星平台、激光互联与在轨算力基础设施需求预期升温</span><span class="step direction-up">利好商业航天</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">这里的变量是：</span><span class="chain-note-text">当前仍处原型验证阶段，规模化部署尚需多年，后续要看在轨测试结果与双星互联进度</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>昨日</span><span class="meta-sep">·</span><span class="meta-type">海外</span><span class="meta-sep">·</span><span class="event-status">风险升温</span></div><div class="meta-result bad">利空 · 存储芯片</div></div><div class="quick-news" data-body="美国国际贸易委员会正式启动针对特定DRAM设备及其下游产品和组件的337调查，申请方Netlist指控相关产品侵犯专利，并请求有限排除令和禁止令；美光、联想、HPE、Super Micro等被列为被告。ITC目前尚未对案件实体作出裁决。（来源：美国ITC）" data-title="美国ITC启动新一轮DRAM 337调查，美光、联想等被列为被告"><div class="quick-news-full"><span class="quick-news-title">【美国ITC启动新一轮DRAM 337调查，美光、联想等被列为被告】</span><span>美国国际贸易委员会正式启动针对特定DRAM设备及其下游产品和组件的337调查，申请方Netlist指控相关产品侵犯专利，并请求有限排除令和禁止令；美光、联想、HPE、Super Micro等被列为被告。ITC目前尚未对案件实体作出裁决。（来源：美国ITC）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step">美国ITC启动DRAM 337调查</span><span class="step direction-down">美光及多家下游厂商进入专利争议程序</span><span class="step direction-down">相关DRAM产品对美销售与供应存在潜在限制风险</span><span class="step key-change">关键变化：存储产业链风险从专利诉讼进一步延伸至<span class="key-annotation">进口排除程序</span></span><span class="step direction-down">供应链合规与客户采购不确定性上升</span><span class="step direction-down">利空存储芯片</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">调查尚处立案阶段，需关注目标完成日期、专利有效性判断及是否最终发布排除令</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>昨日</span><span class="meta-sep">·</span><span class="meta-type">产业</span><span class="meta-sep">·</span><span class="event-status">预期变化</span></div><div class="meta-result good">利好 · 半导体</div></div><div class="quick-news" data-body="供应链消息称，台积电预计自2027年1月起按制程及产品调整晶圆代工价格，涨幅约3%至6%，其中2纳米、3纳米等先进制程涨幅较高。台积电表示不评论价格问题，相关调价仍待后续确认。（来源：财联社）" data-title="台积电据报明年上调晶圆代工价格，先进制程涨幅更高"><div class="quick-news-full"><span class="quick-news-title">【台积电据报明年上调晶圆代工价格，先进制程涨幅更高】</span><span>供应链消息称，台积电预计自2027年1月起按制程及产品调整晶圆代工价格，涨幅约3%至6%，其中2纳米、3纳米等先进制程涨幅较高。台积电表示不评论价格问题，相关调价仍待后续确认。（来源：财联社）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">晶圆代工价格拟上调</span><span class="step">先进制程涨幅更高</span><span class="step direction-up">高端产能利用率与订单能见度预期保持强势</span><span class="step key-change">关键变化：产能紧张开始向<span class="key-annotation">晶圆代工定价权</span>传导</span><span class="step direction-up">代工环节盈利预期与产业景气度获得支撑</span><span class="step direction-up">利好半导体</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">这里的变量是：</span><span class="chain-note-text">目前仍为供应链消息，需继续确认实际调价范围、客户接受度和最终执行价格</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>昨日</span><span class="meta-sep">·</span><span class="meta-type">商品</span><span class="meta-sep">·</span><span class="event-status">持续影响</span></div><div class="meta-result good">利好 · 稀土</div></div><div class="quick-news" data-body="9月中旬以来镨钕系轻稀土价格明显走强。SMM数据显示，9月22日氧化镨钕单日上涨5000元/吨、镨钕金属上涨7500元/吨，9月23日虽小幅回调但仍处近期高位；产业人士称低价现货减少、上游报价坚挺是本轮上涨的重要原因。（来源：证券日报）" data-title="轻稀土价格维持强势，低价现货减少支撑上游报价"><div class="quick-news-full"><span class="quick-news-title">【轻稀土价格维持强势，低价现货减少支撑上游报价】</span><span>9月中旬以来镨钕系轻稀土价格明显走强。SMM数据显示，9月22日氧化镨钕单日上涨5000元/吨、镨钕金属上涨7500元/吨，9月23日虽小幅回调但仍处近期高位；产业人士称低价现货减少、上游报价坚挺是本轮上涨的重要原因。（来源：证券日报）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">轻稀土价格中枢抬升</span><span class="step direction-up">低价现货减少、上游报价坚挺</span><span class="step">资源端供需格局趋紧</span><span class="step key-change">关键变化：供给约束开始形成<span class="key-annotation">持续的价格支撑</span></span><span class="step direction-up">上游资源与冶炼环节盈利弹性提升</span><span class="step direction-up">利好稀土</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">价格强势能否延续，以及下游磁材企业对原料涨价的承接能力</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<article class="story"><div class="meta"><div class="meta-left"><span>今晨</span><span class="meta-sep">·</span><span class="meta-type">商品</span><span class="meta-sep">·</span><span class="event-status">风险升温</span></div><div class="meta-result good">利好 · 油气资源</div></div><div class="quick-news" data-body="隔夜国际油价集体上涨，美油主力合约涨约2.8%，布油主力合约涨约2.4%并重回100美元上方。市场对中东供应风险的担忧仍高，供应紧张削弱了部分缓和预期。（来源：每日经济新闻）" data-title="供应紧张推动国际油价继续上涨，布油重回100美元上方"><div class="quick-news-full"><span class="quick-news-title">【供应紧张推动国际油价继续上涨，布油重回100美元上方】</span><span>隔夜国际油价集体上涨，美油主力合约涨约2.8%，布油主力合约涨约2.4%并重回100美元上方。市场对中东供应风险的担忧仍高，供应紧张削弱了部分缓和预期。（来源：每日经济新闻）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">中东供应风险维持高位</span><span class="step direction-up">原油风险溢价重新走强</span><span class="step direction-up">布油重回100美元上方</span><span class="step key-change">关键变化：<span class="key-annotation">供应紧张</span>再次压过短期缓和预期</span><span class="step direction-up">上游油气资产盈利与资源价值预期获得支撑</span><span class="step direction-up">利好油气资源</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">中东局势与霍尔木兹海峡相关谈判进展可能使油价风险溢价快速反向波动</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<div aria-hidden="true" class="feed-tail"></div>
+</template>
+<template id="edition-template-2026-09-24">
+<article class="story"><div class="meta"><div class="meta-left"><span>昨夜</span><span class="meta-sep">·</span><span class="meta-type">政策</span><span class="meta-sep">·</span><span class="event-status">关键确认</span></div><div class="meta-result good">利好 · 通信技术</div></div><div class="quick-news" data-body="工信部在2026年中国国际信息通信展览会上表示，将适度超前、系统推进新一代通信网建设，推动宽带网络向“双万兆”演进，推进低轨卫星互联网建设，并推动算力设施扩容提质、强化算网协同。（来源：工信部）" data-title="工信部：适度超前建设新一代通信网，推动算力设施扩容提质"><div class="quick-news-full"><span class="quick-news-title">【工信部：适度超前建设新一代通信网，推动算力设施扩容提质】</span><span>工信部在2026年中国国际信息通信展览会上表示，将适度超前、系统推进新一代通信网建设，推动宽带网络向“双万兆”演进，推进低轨卫星互联网建设，并推动算力设施扩容提质、强化算网协同。（来源：工信部）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>会员限免 · 投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">新一代通信网适度超前建设</span><span class="step">双万兆、低轨卫星与算力设施同步推进</span><span class="step direction-up">网络设备与传输基础设施建设需求提升</span><span class="step key-change">关键变化：通信基础设施从单点升级走向<span class="key-annotation">网络与算力协同建设</span></span><span class="step direction-up">产业链中长期订单与资本开支预期改善</span><span class="step direction-up">利好通信技术</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">运营商实际资本开支节奏，以及双万兆、低轨卫星和算力网项目的具体落地进度</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+
+<article class="story"><div class="meta"><div class="meta-left"><span>今日</span><span class="meta-sep">·</span><span class="meta-type">公司</span><span class="meta-sep">·</span><span class="event-status">关键确认</span></div><div class="meta-result good">利好 · 创新药</div></div><div class="quick-news" data-body="诺诚健华与礼来达成研发和授权许可战略合作，计划开发最多5项创新靶点项目。诺诚健华有权获得最高1亿美元首付款和近期付款，以及最高32.5亿美元开发及商业化里程碑付款，并享有销售分成。（来源：证券时报）" data-title="诺诚健华与礼来达成全球合作，潜在总交易额最高32.5亿美元"><div class="quick-news-full"><span class="quick-news-title">【诺诚健华与礼来达成全球合作，潜在总交易额最高32.5亿美元】</span><span>诺诚健华与礼来达成研发和授权许可战略合作，计划开发最多5项创新靶点项目。诺诚健华有权获得最高1亿美元首付款和近期付款，以及最高32.5亿美元开发及商业化里程碑付款，并享有销售分成。（来源：证券时报）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step">国际药企与国内创新平台达成合作</span><span class="step direction-up">最多5项创新靶点项目获得全球开发资源</span><span class="step direction-up">研发平台的外部验证与资金支持增强</span><span class="step key-change">关键变化：合作从单一项目授权升级为<span class="key-annotation">多靶点平台级合作</span></span><span class="step direction-up">创新药BD兑现与研发投入预期提升</span><span class="step direction-up">利好创新药</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">各项目后续进入开发阶段的节奏，以及里程碑付款实际兑现情况</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+
+<article class="story"><div class="meta"><div class="meta-left"><span>今晨</span><span class="meta-sep">·</span><span class="meta-type">产业</span><span class="meta-sep">·</span><span class="event-status">预期变化</span></div><div class="meta-result good">利好 · 半导体</div></div><div class="quick-news" data-body="据供应链消息，台积电预计自2027年1月起调整晶圆代工价格，涨幅约3%至6%，其中2纳米、3纳米等先进制程涨幅较高。台积电表示不评论价格问题，相关调价目前仍待后续确认。（来源：新浪财经）" data-title="台积电据报明年上调晶圆代工价格，先进制程涨幅更高"><div class="quick-news-full"><span class="quick-news-title">【台积电据报明年上调晶圆代工价格，先进制程涨幅更高】</span><span>据供应链消息，台积电预计自2027年1月起调整晶圆代工价格，涨幅约3%至6%，其中2纳米、3纳米等先进制程涨幅较高。台积电表示不评论价格问题，相关调价目前仍待后续确认。（来源：新浪财经）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">晶圆代工价格拟上调</span><span class="step">先进制程涨幅更高</span><span class="step direction-up">高端产能利用率与订单能见度预期保持强势</span><span class="step key-change">关键变化：产能紧张开始向<span class="key-annotation">晶圆代工定价权</span>传导</span><span class="step direction-up">代工环节盈利预期与产业景气度获得支撑</span><span class="step direction-up">利好半导体</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">这里的变量是：</span><span class="chain-note-text">目前仍为供应链消息，需继续确认实际调价范围、客户接受度和最终执行价格</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+
+<article class="story"><div class="meta"><div class="meta-left"><span>今日</span><span class="meta-sep">·</span><span class="meta-type">产业</span><span class="meta-sep">·</span><span class="event-status">新变量</span></div><div class="meta-result bad">利空 · 消费电子</div></div><div class="quick-news" data-body="据新浪科技，多地运营商员工已收到通知，三大运营商旗下橙分期、沃分期、和包信用购等金融分期购机业务自9月24日起暂停新增办理，存量合约继续执行；三家客服均确认业务暂停，官方尚未正式回应。（来源：新浪科技）" data-title="三大运营商暂停金融分期购机新业务，“0元购机”停止新增办理"><div class="quick-news-full"><span class="quick-news-title">【三大运营商暂停金融分期购机新业务，“0元购机”停止新增办理】</span><span>据新浪科技，多地运营商员工已收到通知，三大运营商旗下橙分期、沃分期、和包信用购等金融分期购机业务自9月24日起暂停新增办理，存量合约继续执行；三家客服均确认业务暂停，官方尚未正式回应。（来源：新浪科技）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-down">运营商金融分期暂停新增</span><span class="step direction-down">“低首付/0元购机”销售工具减少</span><span class="step direction-up">部分价格敏感用户购机门槛上升</span><span class="step key-change">关键变化：运营商渠道少了一项<span class="key-annotation">促进终端成交的金融工具</span></span><span class="step direction-down">线下终端销售转化短期承压</span><span class="step direction-down">利空消费电子</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">此次暂停是短期产品升级还是长期取消，以及运营商渠道在手机销售中的实际占比</span></div><button class="chain-collapse" type="button">收起</button></div></section></article>
+<div aria-hidden="true" class="feed-tail"></div>
+</template>
+<template id="edition-template-2026-09-23">
+<article class="story"><div class="meta"><div class="meta-left"><span>今晨</span><span class="meta-sep">·</span><span class="meta-type">宏观</span><span class="meta-sep">·</span><span class="event-status">新变量</span></div><div class="meta-result good">利好 · 人民币资产</div></div><div class="quick-news" data-body="人民币在岸和离岸汇率升至三年多高位，市场认为央行近期对人民币升值的约束有所放松，汇率在中美领导人会晤前保持偏强。（来源：路透）" data-title="人民币升至三年多高位，央行对升值约束有所放松"><div class="quick-news-full"><span class="quick-news-title">【人民币升至三年多高位，央行对升值约束有所放松】</span><span>人民币在岸和离岸汇率升至三年多高位，市场认为央行近期对人民币升值的约束有所放松，汇率在中美领导人会晤前保持偏强。（来源：路透）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>会员限免 · 投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">人民币走强</span><span class="step">汇率预期改善</span><span class="step direction-down">外资配置人民币资产的汇兑压力下降</span><span class="step key-change">关键变化：人民币资产定价环境出现<span class="key-annotation">边际改善</span></span><span class="step direction-up">风险偏好与估值修复空间提升</span><span class="step direction-up">利好人民币资产</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">汇率强势能否延续，以及外资流入是否同步改善</span></div><button class="chain-collapse" type="button">收起</button></div></section></article><article class="story">
+<div class="meta">
+<div class="meta-left"><span>昨日</span><span class="meta-sep">·</span><span class="meta-type">产业</span><span class="meta-sep">·</span><span class="event-status">关键确认</span></div>
+<div class="meta-result good">利好 · 机器人零部件</div>
+</div><div class="quick-news" data-body="团队已走访拓普、三花、均胜等长三角供应链企业，重点核查产线质量、交付能力及合规情况，审厂通过后将进入正式生产准备阶段。（来源：澎湃新闻）" data-title="特斯拉启动机器人量产审厂，已走访多家供应链企业"><div class="quick-news-full"><span class="quick-news-title">【特斯拉启动机器人量产审厂，已走访多家供应链企业】</span><span>团队已走访拓普、三花、均胜等长三角供应链企业，重点核查产线质量、交付能力及合规情况，审厂通过后将进入正式生产准备阶段。（来源：澎湃新闻）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div>
+<div class="headline">特斯拉机器人量产审厂启动，团队已走访拓普、三花、均胜等长三角供应链企业，审厂通过后将很快开始生产。</div>
+<div class="news-body-wrap" data-body="据市场消息，相关团队已于近期在长三角多家核心供应商处开展机器人新业务量产审厂，重点核查产线质量、交付能力及合规情况。审厂通过后，供应商有望进入正式生产准备阶段。">
+<div class="news-body-full">据市场消息，相关团队已于近期在长三角多家核心供应商处开展机器人新业务量产审厂，重点核查产线质量、交付能力及合规情况。审厂通过后，供应商有望进入正式生产准备阶段。</div>
+<div class="news-preview">
+<div class="news-row news-row1"></div>
+<div class="news-row news-row2"><div class="news-row2-text"></div><button class="news-more" type="button">查看更多</button></div>
+</div>
+<button class="news-collapse" type="button">收起</button>
+</div>
+<section class="commentary">
+<div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div>
+<div class="chain-wrap">
+<div class="chain-full"><span class="step">量产审厂启动</span><span class="step">进入量产前验证</span><span class="step key-change">关键变化：供应链从样品验证<span class="key-annotation">转向量产准备</span></span><span class="step">核心供应商开始备产</span><span class="step direction-up">订单与产能利用率预期上修</span><span class="step direction-up">利好机器人零部件</span></div>
+<div class="chain-preview">
+<div class="chain-row chain-row1"></div>
+<div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div>
+</div>
+<div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">正式量产订单是否落地、量产节奏是否按计划推进</span></div><button class="chain-collapse" type="button">收起</button>
+</div>
+</section>
+</article><article class="story">
+<div class="meta">
+<div class="meta-left"><span>昨夜</span><span class="meta-sep">·</span><span class="meta-type">商品</span><span class="meta-sep">·</span><span class="event-status">持续影响</span></div>
+<div class="meta-result good">利好 · 航空</div>
+</div><div class="quick-news" data-body="市场重新评估高油价对下游行业成本的压力。对于燃油成本占比较高的行业，成本端变化可能更快传导到盈利预期。（来源：卓创资讯）" data-title="国际油价明显回落，WTI盘中跌幅继续扩大"><div class="quick-news-full"><span class="quick-news-title">【国际油价明显回落，WTI盘中跌幅继续扩大】</span><span>市场重新评估高油价对下游行业成本的压力。对于燃油成本占比较高的行业，成本端变化可能更快传导到盈利预期。（来源：卓创资讯）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div>
+<div class="headline">国际油价明显回落，WTI原油盘中跌幅扩大，市场重新评估高油价对下游行业成本的压力。</div>
+<div class="news-body-wrap" data-body="国际原油价格在盘中继续走弱，市场开始重新评估能源成本回落对下游行业利润端的影响。对于燃油成本占比较高的行业，成本端变化可能更快传导到盈利预期。">
+<div class="news-body-full">国际原油价格在盘中继续走弱，市场开始重新评估能源成本回落对下游行业利润端的影响。对于燃油成本占比较高的行业，成本端变化可能更快传导到盈利预期。</div>
+<div class="news-preview">
+<div class="news-row news-row1"></div>
+<div class="news-row news-row2"><div class="news-row2-text"></div><button class="news-more" type="button">查看更多</button></div>
+</div>
+<button class="news-collapse" type="button">收起</button>
+</div>
+<section class="commentary">
+<div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div>
+<div class="chain-wrap">
+<div class="chain-full"><span class="step direction-down">油价回落</span><span class="step direction-down">航油采购成本下降</span><span class="step key-change">关键变化：成本端压力开始直接<span class="key-annotation">释放盈利弹性</span></span><span class="step direction-up">市场重新上修航空盈利预期</span><span class="step direction-up">利好航空</span></div>
+<div class="chain-preview">
+<div class="chain-row chain-row1"></div>
+<div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div>
+</div>
+<div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">油价回落是否具有持续性，以及航司票价能否保持</span></div><button class="chain-collapse" type="button">收起</button>
+</div>
+</section>
+</article><article class="story"><div class="meta"><div class="meta-left"><span>昨夜</span><span class="meta-sep">·</span><span class="meta-type">海外</span></div><div class="meta-result good">利好 · AI算力</div></div><div class="quick-news" data-body="美国科技股在AI需求和企业盈利支撑下重新走强，AMD市值突破1万亿美元，费城半导体指数升至一个多月高位。油价回落也改善了市场风险偏好。（来源：中新经纬）" data-title="纳斯达克盘中刷新纪录高位，科技股重新领涨"><div class="quick-news-full"><span class="quick-news-title">【纳斯达克盘中刷新纪录高位，科技股重新领涨】</span><span>美国科技股在AI需求和企业盈利支撑下重新走强，AMD市值突破1万亿美元，费城半导体指数升至一个多月高位。油价回落也改善了市场风险偏好。（来源：中新经纬）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">科技股重新领涨</span><span class="step direction-up">AI需求与盈利预期保持韧性</span><span class="step key-change">关键变化：高久期成长资产<span class="key-annotation">风险偏好重新修复</span></span><span class="step direction-down">芯片与算力板块估值压力缓解</span><span class="step direction-up">资金重新回流高景气成长方向</span><span class="step direction-up">利好AI算力</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">盈利兑现能否跟上估值修复</span></div><button class="chain-collapse" type="button">收起</button></div></section></article><article class="story"><div class="meta"><div class="meta-left"><span>昨日</span><span class="meta-sep">·</span><span class="meta-type">产业</span></div><div class="meta-result good">利好 · 天然气/LNG</div></div><div class="quick-news" data-body="消息称沙特阿美计划重组业务架构，新设天然气部门，覆盖国内外天然气及LNG开发，并可能探索引入外部资本。（来源：路透）" data-title="沙特阿美拟设独立天然气业务部门，继续加码天然气布局"><div class="quick-news-full"><span class="quick-news-title">【沙特阿美拟设独立天然气业务部门，继续加码天然气布局】</span><span>消息称沙特阿美计划重组业务架构，新设天然气部门，覆盖国内外天然气及LNG开发，并可能探索引入外部资本。（来源：路透）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step">新设天然气业务部门</span><span class="step">天然气业务独立化</span><span class="step key-change">关键变化：投资与融资资源有望向天然气业务<span class="key-annotation">进一步集中</span></span><span class="step direction-up">天然气与LNG项目推进预期升温</span><span class="step direction-up">产业链资本开支预期改善</span><span class="step direction-up">利好天然气/LNG</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">后续资本投入规模与具体项目落地</span></div><button class="chain-collapse" type="button">收起</button></div></section></article><article class="story"><div class="meta"><div class="meta-left"><span>昨夜</span><span class="meta-sep">·</span><span class="meta-type">商品</span><span class="meta-sep">·</span><span class="event-status">风险升温</span></div><div class="meta-result bad">利空 · 黄金</div></div><div class="quick-news" data-body="现货黄金出现回落，美元走强以及市场对美联储进一步加息的预期上升，削弱了无息资产的相对吸引力。（来源：汇通财经）" data-title="美元走强叠加加息预期升温，黄金价格回落"><div class="quick-news-full"><span class="quick-news-title">【美元走强叠加加息预期升温，黄金价格回落】</span><span>现货黄金出现回落，美元走强以及市场对美联储进一步加息的预期上升，削弱了无息资产的相对吸引力。（来源：汇通财经）</span></div><div class="quick-news-preview"><div class="quick-news-row quick-news-row1"></div><div class="quick-news-row quick-news-row2"></div><div class="quick-news-row quick-news-row3"><div class="quick-news-row3-text"></div><button class="quick-news-more" type="button">查看更多</button></div></div><button class="quick-news-collapse" type="button">收起</button></div><section class="commentary"><div class="commentary-label benefit-inline"><span class="benefit-v">V</span><span>投研拆解</span></div><div class="chain-wrap"><div class="chain-full"><span class="step direction-up">美元走强</span><span class="step direction-up">加息预期升温</span><span class="step direction-up">黄金持有机会成本上升</span><span class="step key-change">关键变化：贵金属定价重新受到利率与美元<span class="key-annotation">双重压制</span></span><span class="step direction-down">资金避险偏好不足以抵消利率压力</span><span class="step direction-down">利空黄金</span></div><div class="chain-preview"><div class="chain-row chain-row1"></div><div class="chain-row chain-row2"><div class="chain-row2-text"></div><button class="chain-more" type="button">查看完整</button></div></div><div class="chain-research-note"><span class="chain-note-label">继续观察：</span><span class="chain-note-text">美元和实际利率是否继续上行</span></div><button class="chain-collapse" type="button">收起</button></div></section></article><div aria-hidden="true" class="feed-tail"></div>
+</template>
+
+</div>
+<script>
+function makeQuickNewsMeasurer(reference){
+  const cs=getComputedStyle(reference);
+  const m=document.createElement('span');
+  m.style.position='absolute';
+  m.style.visibility='hidden';
+  m.style.pointerEvents='none';
+  m.style.whiteSpace='nowrap';
+  m.style.fontFamily=cs.fontFamily;
+  m.style.fontSize=cs.fontSize;
+  m.style.fontStyle=cs.fontStyle;
+  m.style.letterSpacing=cs.letterSpacing;
+  document.body.appendChild(m);
+  return m;
+}
+
+function quickWidth(measurer,text,weight){
+  measurer.style.fontWeight=weight;
+  measurer.textContent=text;
+  return measurer.getBoundingClientRect().width;
+}
+
+function buildQuickTokens(title,body,measurer){
+  const tokens=[];
+  const t='【'+title+'】';
+  for(const ch of t){
+    tokens.push({text:ch,kind:'title',width:quickWidth(measurer,ch,'650')});
+  }
+  for(const ch of body){
+    tokens.push({text:ch,kind:'body',width:quickWidth(measurer,ch,'400')});
+  }
+  return tokens;
+}
+
+function packQuick(tokens,widths,rowLimit){
+  const rows=Array.from({length:rowLimit},()=>[]);
+  let row=0,used=0,i=0;
+  while(i<tokens.length && row<rowLimit){
+    const max=widths[row];
+    const tk=tokens[i];
+    if(used + tk.width <= max){
+      rows[row].push(tk);
+      used += tk.width;
+      i++;
+    }else{
+      row++;
+      used=0;
+    }
+  }
+  return {rows,consumed:i,hasMore:i<tokens.length};
+}
+
+function renderQuickRow(container,tokens){
+  container.innerHTML='';
+  let currentKind=null,buffer='';
+  const flush=()=>{
+    if(!buffer) return;
+    const s=document.createElement('span');
+    s.className=currentKind==='title' ? 'q-title' : 'q-body';
+    s.textContent=buffer;
+    container.appendChild(s);
+    buffer='';
+  };
+  tokens.forEach(t=>{
+    if(t.kind!==currentKind){
+      flush();
+      currentKind=t.kind;
+    }
+    buffer += t.text;
+  });
+  flush();
+}
+
+function setupQuickNews(){
+  document.querySelectorAll('.quick-news').forEach(wrap=>{
+    const full=wrap.querySelector('.quick-news-full');
+    const preview=wrap.querySelector('.quick-news-preview');
+    const row1=wrap.querySelector('.quick-news-row1');
+    const row2=wrap.querySelector('.quick-news-row2');
+    const row3Text=wrap.querySelector('.quick-news-row3-text');
+    const more=wrap.querySelector('.quick-news-more');
+    const collapse=wrap.querySelector('.quick-news-collapse');
+
+    full.style.display='block';
+    preview.style.display='none';
+    collapse.style.display='none';
+
+    requestAnimationFrame(()=>{
+      const measurer=makeQuickNewsMeasurer(full);
+      const tokens=buildQuickTokens(wrap.dataset.title||'',wrap.dataset.body||'',measurer);
+      const fullWidth=wrap.getBoundingClientRect().width;
+
+      // 先判断：3行全宽能否完整放下
+      const natural=packQuick(tokens,[fullWidth,fullWidth,fullWidth],3);
+
+      if(!natural.hasMore){
+        measurer.remove();
+        return; // <=3行：完整展示，无“查看更多”
+      }
+
+      // >3行：第三行右侧“查看更多”真实占位
+      preview.style.display='block';
+      full.style.display='none';
+
+      requestAnimationFrame(()=>{
+        const widths=[
+          row1.getBoundingClientRect().width,
+          row2.getBoundingClientRect().width,
+          row3Text.getBoundingClientRect().width
+        ];
+        const packed=packQuick(tokens,widths,3);
+
+        renderQuickRow(row1,packed.rows[0]);
+        renderQuickRow(row2,packed.rows[1]);
+        renderQuickRow(row3Text,packed.rows[2]);
+        measurer.remove();
+
+        more.onclick=()=>{
+          preview.style.display='none';
+          full.style.display='block';
+          collapse.style.display='inline-block';
+        };
+        collapse.onclick=()=>{
+          full.style.display='none';
+          collapse.style.display='none';
+          preview.style.display='block';
+        };
+      });
+    });
+  });
+}
+
+
+function chainTokenSpan(token){
+  const s=document.createElement('span');
+  if(token.type==='arrow'){
+    s.className='preview-arrow';
+    s.textContent='→';
+  }else{
+    s.className='preview-step';
+    if(token.direction) s.classList.add(token.direction);
+    s.textContent=token.text;
+  }
+  return s;
+}
+
+function buildChainTokens(full){
+  const tokens=[];
+  const steps=Array.from(full.querySelectorAll(':scope > .step'));
+
+  steps.forEach((step,index)=>{
+    if(index>0){
+      tokens.push({type:'arrow'});
+    }
+    const direction=step.classList.contains('direction-up')
+      ? 'direction-up'
+      : step.classList.contains('direction-down')
+        ? 'direction-down'
+        : '';
+    for(const ch of step.textContent.trim()){
+      tokens.push({type:'char',text:ch,direction});
+    }
+  });
+  return tokens;
+}
+
+function canAppendGroup(row, group){
+  const nodes=group.map(chainTokenSpan);
+  nodes.forEach(n=>row.appendChild(n));
+  const fits=row.scrollWidth <= row.clientWidth + 0.5;
+  if(!fits) nodes.forEach(n=>n.remove());
+  return {fits,nodes};
+}
+
+/*
+  将 token 真实塞进 row DOM。
+  规则：
+  - 中文可以逐字换行，因此第一行一定尽量填满；
+  - 箭头不能孤立在行尾，箭头必须和后面的第一个字一起测试；
+  - 返回下一行应继续处理的 token 索引。
+*/
+function fillActualRow(row,tokens,startIndex){
+  row.innerHTML='';
+  let i=startIndex;
+
+  while(i<tokens.length){
+    const token=tokens[i];
+
+    if(token.type==='arrow'){
+      const next=tokens[i+1];
+      const group=next ? [token,next] : [token];
+      const test=canAppendGroup(row,group);
+
+      if(test.fits){
+        // 节点已经在 DOM 中
+        i += group.length;
+        continue;
+      }
+      // 放不下：整个“箭头+首字”留给下一行
+      break;
+    }
+
+    const test=canAppendGroup(row,[token]);
+    if(test.fits){
+      i++;
+      continue;
+    }
+    break;
+  }
+
+  return i;
+}
+
+function setupChains(){
+  document.querySelectorAll('.chain-wrap').forEach(wrap=>{
+    const full=wrap.querySelector('.chain-full');
+    const preview=wrap.querySelector('.chain-preview');
+    const row1=wrap.querySelector('.chain-row1');
+    const row2Text=wrap.querySelector('.chain-row2-text');
+    const more=wrap.querySelector('.chain-more');
+    const collapse=wrap.querySelector('.chain-collapse');
+    if(!full || !preview || !row1 || !row2Text || !more || !collapse) return;
+
+    const tokens=buildChainTokens(full);
+
+    // 默认先隐藏 preview；完整链只作为展开内容和数据源。
+    preview.style.display='none';
+    collapse.style.display='none';
+    full.style.display='block';
+
+    requestAnimationFrame(()=>{
+      /*
+        第一步：用两个“全宽真实行”模拟自然两行。
+        不看 full 的高度，不做字符估算。
+      */
+      const tester=document.createElement('div');
+      tester.style.position='absolute';
+      tester.style.visibility='hidden';
+      tester.style.pointerEvents='none';
+      tester.style.width=wrap.clientWidth+'px';
+      tester.style.font=getComputedStyle(full).font;
+      tester.style.lineHeight=getComputedStyle(full).lineHeight;
+      document.body.appendChild(tester);
+
+      const testRow1=document.createElement('div');
+      const testRow2=document.createElement('div');
+      [testRow1,testRow2].forEach(r=>{
+        r.className='chain-row';
+        r.style.width='100%';
+        tester.appendChild(r);
+      });
+
+      const afterRow1=fillActualRow(testRow1,tokens,0);
+      const afterRow2=fillActualRow(testRow2,tokens,afterRow1);
+      const fitsTwoLines=afterRow2>=tokens.length;
+
+      tester.remove();
+
+      // 规则写死：<=2行，完整展示，没有 CTA
+      if(fitsTwoLines){
+        full.style.display='block';
+        preview.style.display='none';
+        collapse.style.display='none';
+        return;
+      }
+
+      /*
+        >2行：严格预览两行。
+        第二行 grid 中 CTA 已经真实占位，因此 row2Text.clientWidth
+        就是扣掉“查看完整”后的可用宽度。
+      */
+      full.style.display='none';
+      preview.style.display='block';
+
+      requestAnimationFrame(()=>{
+        const afterPreviewRow1=fillActualRow(row1,tokens,0);
+        fillActualRow(row2Text,tokens,afterPreviewRow1);
+
+        more.onclick=()=>{
+          wrap.classList.add('is-expanded');
+          preview.style.display='none';
+          full.style.display='block';
+          collapse.style.display='inline-block';
+        };
+
+        collapse.onclick=()=>{
+          wrap.classList.remove('is-expanded');
+          full.style.display='none';
+          collapse.style.display='none';
+          preview.style.display='block';
+        };
+      });
+    });
+  });
+}
+
+
+
+const EDITION_META={
+  '2026-09-25':{
+    label:'9月25日',
+    count:'· 精选 7 个近期重要事件',
+    intro:'今天重点看七个变化：货币政策继续保持适度宽松；AI算力大额采购继续落地；太空数据中心进入在轨验证；DRAM供应链新增专利调查风险；晶圆代工涨价预期延续；轻稀土价格保持强势；国际油价重回100美元上方。'
+  },
+  '2026-09-24':{
+    label:'9月24日',
+    count:'· 精选 4 个近期重要事件',
+    intro:'今天重点看四个变化：通信基础设施建设进一步明确；创新药全球合作出现大额新订单；晶圆代工涨价预期强化半导体定价权；运营商金融分期暂停给消费电子渠道带来新变量。'
+  },
+  '2026-09-23':{
+    label:'9月23日',
+    count:'· 精选 6 个近期重要事件',
+    intro:'今天重点看三条主线：人民币走强带来资产定价新变量；机器人量产审厂进入关键确认；油价回落继续改善航空成本预期。'
+  }
+};
+
+function renderEdition(date){
+  const tpl=document.getElementById('edition-template-'+date);
+  const meta=EDITION_META[date];
+  const main=document.querySelector('main');
+  if(!tpl || !meta || !main) return false;
+
+  main.innerHTML=tpl.innerHTML;
+  const trigger=document.querySelector('.edition-date-trigger');
+  const count=document.querySelector('.edition-count');
+  const intro=document.querySelector('.edition-intro-text');
+  if(trigger) trigger.textContent=meta.label;
+  if(count) count.textContent=meta.count;
+  if(intro) intro.textContent=meta.intro;
+
+  document.querySelectorAll('.edition-history-item').forEach(item=>{
+    const current=item.dataset.date===date;
+    item.classList.toggle('is-current',current);
+    let mark=item.querySelector('.edition-history-current');
+    if(date==='2026-09-25' && current){
+      if(!mark){
+        mark=document.createElement('span');
+        mark.className='edition-history-current';
+        mark.textContent='今日';
+        item.appendChild(mark);
+      }
+    }else if(mark){
+      mark.remove();
+    }
+  });
+
+  setupQuickNews();
+  setupChains();
+  window.scrollTo({top:0,behavior:'auto'});
+  return true;
+}
+
+function setupEditionHistory(){
+  const trigger=document.querySelector('.edition-date-trigger');
+  const panel=document.querySelector('.edition-history-panel');
+  if(!trigger || !panel) return;
+
+  const closePanel=()=>{
+    panel.classList.remove('is-open');
+    trigger.setAttribute('aria-expanded','false');
+  };
+
+  trigger.addEventListener('click',(event)=>{
+    event.stopPropagation();
+    const willOpen=!panel.classList.contains('is-open');
+    panel.classList.toggle('is-open',willOpen);
+    trigger.setAttribute('aria-expanded',String(willOpen));
+  });
+
+  panel.addEventListener('click',(event)=>event.stopPropagation());
+  panel.querySelectorAll('.edition-history-item').forEach(item=>{
+    item.addEventListener('click',()=>{
+      if(item.disabled) return;
+      closePanel();
+      renderEdition(item.dataset.date);
+      document.dispatchEvent(new CustomEvent('edition:select-date',{
+        detail:{date:item.dataset.date}
+      }));
+    });
+  });
+
+  document.addEventListener('click',closePanel);
+  document.addEventListener('keydown',(event)=>{
+    if(event.key==='Escape') closePanel();
+  });
+}
+
+function initializeHotspotPage(){
+  setupQuickNews();
+  setupChains();
+  setupEditionHistory();
+}
+
+/*
+  初始化兜底：
+  - 正常页面加载时等待 DOMContentLoaded；
+  - 若预览容器注入 HTML 时 DOMContentLoaded 已经发生，则立即初始化。
+  只增强初始化可靠性，不改变任何新闻/链路展示规则。
+*/
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',initializeHotspotPage,{once:true});
+}else{
+  initializeHotspotPage();
+}
+</script>
+<script>
+(function(){
+  function tick(){
+    var el=document.getElementById('liveClock');
+    if(!el) return;
+    var d=new Date();
+    el.textContent=[d.getHours(),d.getMinutes(),d.getSeconds()]
+      .map(function(v){return String(v).padStart(2,'0')}).join(':');
+  }
+  tick();
+  setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>
