@@ -34,18 +34,3 @@ jobs:
             git commit -m "Build static pages"
             git push
           fi
-      - name: Prepare Upma site
-        if: ${{ env.DEPLOY_TOKEN != '' && env.UPMA_PROJECT_ID != '' }}
-        env:
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
-          UPMA_PROJECT_ID: ${{ secrets.UPMA_PROJECT_ID }}
-        run: |
-          mkdir -p .upma-site
-          cp index.html .upma-site/index.html
-          cp -R archive .upma-site/archive
-      - name: Deploy to Upma
-        if: ${{ env.DEPLOY_TOKEN != '' && env.UPMA_PROJECT_ID != '' }}
-        env:
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
-          UPMA_PROJECT_ID: ${{ secrets.UPMA_PROJECT_ID }}
-        run: npx --yes website-deploy-cli ./.upma-site --project "$UPMA_PROJECT_ID" --token "$DEPLOY_TOKEN"
