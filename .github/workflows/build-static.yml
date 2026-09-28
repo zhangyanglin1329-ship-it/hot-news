@@ -10,6 +10,10 @@ on:
       - ".github/workflows/build-static.yml"
   workflow_dispatch:
 
+concurrency:
+  group: build-static-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
