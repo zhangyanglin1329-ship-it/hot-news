@@ -1311,6 +1311,128 @@ main{
    2. 新闻来源作为正文末尾内容参与3行计算
    其余全部锁定
    ========================================================= */
+
+/* =========================================================
+   Readability Patch 2026-09-29｜40岁左右股民阅读舒适度
+   仅调整：字号 / 字重 / 文字颜色对比度 / 行高
+   页面背景、DOM、结构、间距体系、内容与交互全部锁定
+   ========================================================= */
+
+/* 顶部日期、数量与导读：提高小字号辅助信息可读性 */
+.edition-meta{
+  color:#6f757d;
+  font-size:11px;
+  line-height:17px;
+}
+.edition-date-trigger{
+  color:#6f757d;
+  line-height:17px;
+}
+.edition-count{
+  color:#6f757d;
+}
+.edition-intro{
+  font-size:12px;
+  line-height:19px;
+}
+.edition-intro-label{
+  color:#626971;
+}
+.edition-intro-text{
+  color:#4f555d;
+}
+
+/* 单条元信息：保持弱层级，但避免过浅过小 */
+.meta-left{
+  color:#6f757d;
+  font-size:11.5px;
+}
+.meta-left > span:first-child,
+.meta-type,
+.event-status{
+  color:#6f757d !important;
+  font-size:11.5px;
+}
+.meta-result{
+  font-size:11px;
+  font-weight:650;
+}
+.meta-result.good{
+  background:#c93d34;
+}
+.meta-result.bad{
+  background:#177a4a;
+}
+
+/* 新闻主体：只提升连续阅读舒适度，不改变三行规则 */
+.quick-news{
+  color:#4f555d;
+  font-size:15px;
+  line-height:24px;
+}
+.quick-news-preview .q-body{
+  color:#4f555d;
+}
+.quick-news-row{
+  height:24px;
+  line-height:24px;
+}
+.quick-news-row3-text{
+  height:24px;
+  line-height:24px;
+}
+.quick-news-more{
+  color:#626971;
+  font-size:12.5px;
+  line-height:24px;
+}
+.quick-news-collapse{
+  color:#6f757d;
+  font-size:12px;
+}
+
+/* 投研链：保留原结构、红绿语义与两行规则，仅提升字号和对比度 */
+.chain-full,
+.chain-preview{
+  font-size:14px;
+  line-height:26px;
+}
+.chain-row{
+  height:26px;
+  line-height:26px;
+}
+.chain-row2-text{
+  height:26px;
+  line-height:26px;
+}
+.chain-more{
+  color:#626971;
+  font-size:12px;
+  line-height:26px;
+}
+.chain-collapse{
+  color:#6f757d;
+  font-size:12px;
+}
+.direction-up{
+  color:#c93d34 !important;
+}
+.direction-down{
+  color:#177a4a !important;
+}
+.chain-wrap.is-expanded .chain-full,
+.chain-wrap.is-expanded .chain-full .step{
+  line-height:26px;
+}
+.chain-wrap.is-expanded .chain-research-note{
+  color:#626971;
+  font-size:11.5px;
+  line-height:18px;
+}
+.chain-note-text{
+  color:#626971;
+}
+
 </style>
 </head>
 <body>
