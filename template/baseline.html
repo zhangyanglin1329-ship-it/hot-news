@@ -1386,6 +1386,180 @@ main{
   font-weight:550;
 }
 /* ========================================================= */
+
+/* =========================================================
+   热点宝视觉精修 V4｜研究简报识别系统
+   在有效 V1 上重建编辑结构，拒绝 V2 字号膨胀与 V3 大色块
+   只涉及现有元素的 CSS，不改正文、DOM 和 JS
+   ========================================================= */
+
+/* A. 期刊式刊头：日期是出版信息，栏目具有稳定识别点 */
+.edition-head{
+  padding:15px 16px 14px;
+  background:#fbfaf8;
+  border-bottom:1px solid #e6e3df;
+}
+.edition-left{
+  align-items:center;
+  padding-bottom:10px;
+  border-bottom:1px solid #dfdbd3;
+}
+.edition-title{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  color:#222830;
+  font-size:17px;
+  font-weight:700;
+  line-height:22px;
+  letter-spacing:.005em;
+}
+.edition-title::before{
+  content:"";
+  width:7px;
+  height:7px;
+  flex:0 0 7px;
+  background:#a58b68;
+  transform:rotate(45deg);
+}
+.edition-meta{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:0;
+  font-size:10px;
+  line-height:16px;
+}
+.edition-date-trigger{
+  color:#454f5b;
+  font-size:12px;
+  font-weight:650;
+}
+.edition-count{
+  color:#868e97;
+  font-size:9.5px;
+  font-weight:400;
+}
+
+/* B. 导读保持原内容：用研究前言的窄标线代替彩色卡片 */
+.edition-intro{
+  position:relative;
+  display:block;
+  margin-top:12px;
+  padding:0 0 0 12px;
+  border:0;
+  background:transparent;
+  font-size:11.35px;
+  line-height:19.25px;
+}
+.edition-intro::before{
+  content:"";
+  position:absolute;
+  top:3px;
+  bottom:3px;
+  left:0;
+  width:1px;
+  background:#bea98b;
+}
+.edition-intro-label{
+  margin-right:9px;
+  color:#806d55;
+  font-weight:650;
+  letter-spacing:.02em;
+}
+.edition-intro-text{
+  color:#4f5964;
+  font-weight:400;
+}
+
+/* C. 紧凑连续信息流：轻细线分卷，取消新闻卡片感 */
+main{
+  background:#fff;
+}
+.story{
+  margin:0 !important;
+  padding:18px 16px 21px !important;
+  border:0 !important;
+  border-bottom:1px solid #e6e8eb !important;
+  border-radius:0 !important;
+  background:#fff !important;
+  box-shadow:none !important;
+}
+.story:last-of-type{
+  margin-bottom:0 !important;
+}
+.meta{
+  margin-bottom:9px;
+}
+
+/* D. 结果仍为元信息行唯一方向色点，但从实色块改为精致的浅色信号签 */
+.meta-result{
+  font-weight:650;
+  box-shadow:none;
+}
+.meta-result.good{
+  background:#f8eae8;
+  color:#b7413d;
+  box-shadow:inset 2px 0 0 #c84b44;
+}
+.meta-result.bad{
+  background:#eaf5ef;
+  color:#2d815c;
+  box-shadow:inset 2px 0 0 #398661;
+}
+
+/* E. 投研专用“研究栏”：只保留线条、节律和批注，不设大面积底色 */
+.commentary{
+  margin-top:15px;
+  padding:2px 0 4px 13px;
+  background:transparent;
+  border-top:0;
+  border-right:0;
+  border-bottom:0;
+  border-left:2px solid #b7a080;
+  border-radius:0;
+  box-shadow:none;
+}
+.commentary-label.benefit-inline{
+  display:flex;
+  align-items:center;
+  width:100%;
+  gap:5px;
+  margin-bottom:9px;
+  color:#68533d;
+  font-size:11px;
+  font-weight:650;
+  line-height:17px;
+}
+.commentary-label.benefit-inline::after{
+  content:"";
+  flex:1;
+  height:1px;
+  margin-left:7px;
+  background:#e5ded5;
+}
+.chain-full,
+.chain-preview{
+  color:#46505a;
+  font-size:13px;
+}
+.chain-more{
+  color:#626b74;
+  font-weight:550;
+  text-decoration:underline;
+  text-decoration-color:#cebeac;
+  text-underline-offset:3px;
+}
+.chain-wrap.is-expanded .chain-research-note{
+  border-top-color:#e2d9ce;
+}
+
+/* F. 小屏只保护横向空间，不变更模块与文本折行算法 */
+@media (max-width:380px){
+  .edition-head{padding:14px 14px 13px}
+  .story{padding:17px 15px 20px !important}
+}
+/* ========================================================= */
 </style>
 </head>
 <body>
