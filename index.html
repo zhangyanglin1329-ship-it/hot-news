@@ -1386,6 +1386,141 @@ main{
   font-weight:550;
 }
 /* ========================================================= */
+
+/* =========================================================
+   热点宝 UI V3｜编辑刊头 + 专业研究稿视觉
+   仅 CSS：不修改栏目、事实、链路、交互或页面元素
+   原则：平面排版，不用大圆角、阴影、渐变、图片与卡片堆叠
+   ========================================================= */
+
+/* 1. 每日刊头：轻纸张底色 + 极细编排线，非新模块 */
+.edition-head{
+  padding:16px 16px 16px;
+  background:#faf9f6;
+  border-bottom:1px solid #e6e3dd;
+}
+.edition-left{
+  align-items:center;
+  padding-bottom:11px;
+  border-bottom:1px solid #e4e0d9;
+}
+.edition-title{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#1f242b;
+  font-size:16px;
+  line-height:22px;
+  font-weight:700;
+  letter-spacing:.015em;
+}
+.edition-title::before{
+  content:"";
+  display:block;
+  width:3px;
+  height:15px;
+  flex:0 0 3px;
+  background:#333940;
+}
+.edition-meta,
+.edition-count{
+  color:#858b91;
+  font-size:10px;
+}
+.edition-date-trigger{
+  color:#656b73;
+}
+
+/* 2. 本期导读：与事件列表区分的「编辑前言」纸面 */
+.edition-intro{
+  display:block;
+  margin-top:12px;
+  padding:10px 12px 11px;
+  background:#f3f0e9;
+  border-left:2px solid #c8b9a6;
+  border-top:0;
+  border-bottom:0;
+  border-right:0;
+  border-radius:0;
+  font-size:11.5px;
+  line-height:19.5px;
+}
+.edition-intro-label{
+  margin-right:9px;
+  color:#6b5745;
+  font-weight:700;
+}
+.edition-intro-text{
+  color:#4e535a;
+}
+
+/* 3. 内容承载面：保留连续事件流，不变成图片新闻卡 */
+main{
+  background:#f0f1f3;
+}
+.story{
+  margin-bottom:6px !important;
+  padding:17px 16px 18px !important;
+  background:#fff !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+.story:last-of-type{
+  margin-bottom:0 !important;
+}
+.meta{
+  margin-bottom:9px;
+}
+.quick-news{
+  color:#525961;
+  font-size:14px;
+  line-height:23px;
+}
+.quick-news-title,
+.quick-news-preview .q-title{
+  color:#181e26;
+  font-weight:675;
+}
+
+/* 4. 投研专属研究纸面：原左竖线演化，不分割新闻因果链 */
+.commentary{
+  margin-top:15px;
+  padding:11px 12px 12px 13px;
+  background:#f9f6f0;
+  border-left:2px solid #c0a380;
+  border-top:1px solid #f0e8de;
+  border-bottom:1px solid #f0e8de;
+  border-right:0;
+  border-radius:0;
+  box-shadow:none;
+}
+.commentary-label.benefit-inline{
+  margin-bottom:8px;
+  color:#624f3c;
+  font-size:11px;
+  font-weight:650;
+  line-height:17px;
+}
+.chain-full,
+.chain-preview{
+  color:#48505a;
+  font-size:13px;
+}
+.chain-more{
+  color:#726354;
+  font-weight:550;
+}
+.chain-wrap.is-expanded .chain-research-note{
+  border-top-color:#ded4c8;
+}
+
+/* 5. 小屏回归：保留刊头/研究面层级，不牺牲有效宽度 */
+@media (max-width:380px){
+  .edition-head{padding:15px 14px 15px}
+  .story{padding:16px 15px 18px !important}
+  .commentary{padding:10px 10px 11px 12px}
+}
 </style>
 </head>
 <body>
