@@ -1,0 +1,88 @@
+name: UI R1 mobile browser QA
+on:
+  push:
+    branches:
+      - ui/refine-typography-rhythm-vnext953-20261008
+    paths:
+      - .github/workflows/ui-r1-qa.yml
+      - index.html
+      - template/baseline.html
+jobs:
+  browser-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install browser tooling
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Test UI at 375 / 390 / 430
+        run: |
+          mkdir -p qa-screenshots
+          node <<'NODE'
+          const {chromium} = require('playwright');
+          const assert = require('node:assert/strict');
+          const {resolve} = require('node:path');
+          (async ()=>{
+            const browser = await chromium.launch({headless:true});
+            for (const width of [375,390,430]) {
+              const page = await browser.newPage({viewport:{width,height:820},deviceScaleFactor:1});
+              const errors=[];
+              page.on('pageerror',e=>errors.push(e.message));
+              await page.goto('file://'+resolve('index.html'),{waitUntil:'load'});
+              await page.waitForTimeout(850);
+              const state=await page.evaluate(()=>{
+                const app=document.querySelector('.app');
+                const articles=[...document.querySelectorAll('.story')];
+                const quick=[...document.querySelectorAll('.quick-news')];
+                const chains=[...document.querySelectorAll('.chain-wrap')];
+                return {
+                  overflow:document.documentElement.scrollWidth>innerWidth+1,
+                  articleCount:articles.length,quickCount:quick.length,chainCount:chains.length,
+                  masthead:document.querySelector('.edition-title')?.textContent.trim(),
+                  intro:document.querySelector('.edition-intro-text')?.textContent.trim(),
+                  cssPresent:!![...document.styleSheets].some(s=>{
+                    try { return [...s.cssRules].some(r=>r.cssText.includes('letter-spacing: -0.14px')); }
+                    catch {return false;}
+                  })
+                };
+              });
+              assert.equal(state.overflow,false,'Horizontal overflow at '+width);
+              assert.ok(state.articleCount>=5,'No events');
+              assert.equal(state.articleCount,state.quickCount,'Changed news structure');
+              assert.equal(state.articleCount,state.chainCount,'Changed research structure');
+              assert.equal(state.masthead,'今日重点');
+              assert.ok(state.intro && state.intro.length>15,'Missing edition intro');
+              assert.ok(state.cssPresent,'Missing CSS refinement');
+              const newsMore=page.locator('.quick-news-more:visible').first();
+              assert.ok(await newsMore.count()>0,'No news preview');
+              await newsMore.click();
+              assert.ok(await page.locator('.quick-news-collapse:visible').count()>0,'News did not expand');
+              await page.locator('.quick-news-collapse:visible').first().click();
+              assert.ok(await page.locator('.quick-news-more:visible').count()>0,'News failed to collapse');
+              const chainMore=page.locator('.chain-more:visible').first();
+              assert.ok(await chainMore.count()>0,'No chain preview');
+              await chainMore.click();
+              assert.ok(await page.locator('.chain-wrap.is-expanded').count()>0,'Chain did not expand');
+              await page.locator('.chain-collapse:visible').first().click();
+              assert.equal(await page.locator('.chain-wrap.is-expanded').count(),0,'Chain failed to collapse');
+              await page.locator('.edition-date-trigger').click();
+              assert.equal(await page.locator('.edition-date-trigger').getAttribute('aria-expanded'),'true','Date menu broken');
+              await page.locator('.edition-date-trigger').click();
+              await page.screenshot({path:'qa-screenshots/ui-r1-'+width+'.png',fullPage:true});
+              assert.deepEqual(errors,[],'Browser JS errors at '+width);
+              console.log('PASS width='+width+' events='+state.articleCount+' overflow=false news/chain/date=OK');
+              await page.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-r1-visual-smoke
+          path: qa-screenshots/
+          if-no-files-found: ignore
