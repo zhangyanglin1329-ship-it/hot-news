@@ -1311,6 +1311,131 @@ main{
    2. 新闻来源作为正文末尾内容参与3行计算
    其余全部锁定
    ========================================================= */
+
+/* =========================================================
+   UI-R1 · 2026-10-08 · typography / reading rhythm / research
+   Baseline: VNext9.5.3; presentation-only CSS.
+   Do not change content, modules, event order, or interaction scripts.
+   ========================================================= */
+
+/* Daily edition: stronger editorial hierarchy, unchanged content. */
+.edition-head{
+  padding:14px 15px 14px;
+  border-bottom-color:#edf0f2;
+}
+.edition-left{gap:10px;}
+.edition-title{
+  color:#1d232b;
+  font-size:16.5px;
+  font-weight:700;
+  line-height:22px;
+  letter-spacing:-.18px;
+}
+.edition-meta{
+  color:#9298a0;
+  font-size:10.5px;
+  line-height:17px;
+}
+.edition-intro{
+  margin-top:11px;
+  font-size:11.25px;
+  line-height:19.5px;
+}
+.edition-intro-label{
+  margin-right:7px;
+  color:#454c54;
+  font-weight:650;
+}
+.edition-intro-text{color:#606872;}
+
+/* Continuous event stream: separate stories with rhythm, not cards. */
+.story{padding:17px 16px 20px !important;}
+.meta{
+  min-height:20px;
+  margin-bottom:11px;
+}
+.meta-left,
+.meta-left > span:first-child,
+.meta-type,
+.event-status{
+  color:#858c95 !important;
+  font-size:10.5px;
+  font-weight:500;
+}
+.meta-result{
+  min-height:20px;
+  line-height:20px;
+  font-size:10.5px;
+}
+
+/* News: make subject and supporting facts visibly distinct.
+   Preview line boxes track full-text line height, preserving 3-line JS. */
+.quick-news{
+  margin-top:1px;
+  color:#5b626b;
+  font-size:14px;
+  line-height:23.5px;
+  letter-spacing:-.08px;
+}
+.quick-news-full{line-height:23.5px;}
+.quick-news-title,
+.quick-news-preview .q-title{
+  color:#1d2229;
+  font-weight:700;
+  letter-spacing:-.14px;
+}
+.quick-news-preview .q-body{color:#5b626b;}
+.quick-news-row,
+.quick-news-row3-text{
+  height:23.5px;
+  line-height:23.5px;
+}
+.quick-news-more{
+  color:#69717a;
+  font-size:12px;
+  font-weight:500;
+  line-height:23.5px;
+}
+
+/* Research: keep the original left rule and horizontal-then-expanded chain;
+   clarify editorial voice through indentation, spacing and type. */
+.commentary{
+  margin-top:18px;
+  padding:2px 0 3px 13px;
+  border-left-color:#ded5c9;
+}
+.commentary-label.benefit-inline{
+  margin-bottom:8px;
+  color:#695440;
+  font-size:11.25px;
+  font-weight:650;
+  line-height:17px;
+}
+.chain-full,
+.chain-preview{
+  color:#434a52;
+  font-size:13px;
+  line-height:25.5px;
+  letter-spacing:-.04px;
+}
+.chain-more{
+  color:#616a73;
+  font-size:11.5px;
+  font-weight:550;
+}
+.chain-wrap.is-expanded .chain-full .step{
+  line-height:21px;
+}
+.chain-research-note{
+  color:#788089;
+}
+
+/* Compact devices: prevent the edition masthead from crowding its date. */
+@media (max-width:375px){
+  .edition-title{font-size:16px;}
+  .edition-meta{font-size:10px;}
+}
+
 </style>
 </head>
 <body>
