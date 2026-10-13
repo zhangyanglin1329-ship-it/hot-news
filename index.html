@@ -1311,6 +1311,119 @@ main{
    2. 新闻来源作为正文末尾内容参与3行计算
    其余全部锁定
    ========================================================= */
+
+/* =========================================================
+   热点宝｜第一轮视觉精修（仅文字层级、阅读节奏、投研质感）
+   基于线上原始 HTML；不改内容、DOM、JS 和交互。
+   保留连续信息流；不新增卡片、图片或导航。
+   ========================================================= */
+
+/* 1. 版面基调：文字对比清楚，保留原有红绿语义 */
+.app{background:#f4f5f6}
+.edition-head{
+  padding:16px 15px 17px;
+  background:#fff;
+}
+.edition-title{
+  color:#1b2027;
+  font-size:17px;
+  font-weight:700;
+  line-height:23px;
+  letter-spacing:-.25px;
+}
+.edition-meta{
+  color:#8b9199;
+  font-size:10.5px;
+  line-height:17px;
+}
+.edition-date-trigger{color:#7c848d}
+.edition-count{color:#8f959d}
+
+/* 2. 本期导读：像编辑前言，而不是营销卡片 */
+.edition-intro{
+  margin-top:12px;
+  font-size:11.2px;
+  line-height:19.5px;
+}
+.edition-intro-label{
+  margin-right:7px;
+  color:#464d56;
+  font-weight:650;
+}
+.edition-intro-text{
+  color:#626b75;
+  font-weight:400;
+}
+
+/* 3. 事件单元：仅重新校准呼吸感和阅读层级 */
+main{padding-top:8px !important}
+.story{
+  margin-bottom:7px !important;
+  padding:18px 16px 21px !important;
+}
+.meta{margin-bottom:10px}
+.meta-left{
+  color:#858c95;
+  letter-spacing:.05px;
+}
+.quick-news{
+  color:#4d555e;
+  font-size:14px;
+  line-height:23px;
+}
+.quick-news-title,
+.quick-news-preview .q-title{
+  color:#1c2128;
+  font-weight:650;
+}
+.quick-news-preview .q-body{
+  color:#4d555e;
+}
+.quick-news-row,
+.quick-news-row3-text{
+  height:23px;
+  line-height:23px;
+}
+.quick-news-more{
+  line-height:23px;
+  color:#6c7580;
+}
+.quick-news-collapse{color:#6c7580}
+
+/* 4. 投研拆解：研究人员旁注式层级，不做第二张卡 */
+.commentary{
+  margin-top:18px;
+  padding:2px 0 1px 12px;
+  border-left:2px solid #d7c5af;
+}
+.commentary-label.benefit-inline{
+  margin-bottom:9px;
+  color:#695642;
+  font-size:11.25px;
+  font-weight:650;
+  letter-spacing:.01em;
+}
+.chain-full,
+.chain-preview{
+  color:#48515c;
+  font-size:13px;
+}
+.chain-more{
+  color:#636d78;
+  font-size:11.5px;
+  font-weight:550;
+}
+.chain-research-note{
+  color:#737b84;
+}
+
+/* 5. 小屏守护：保留原始三行新闻/两行链路的测量逻辑 */
+@media(max-width:359px){
+  .edition-title{font-size:16px}
+  .edition-meta{font-size:10px}
+  .story{padding-left:15px !important;padding-right:15px !important}
+}
+
 </style>
 </head>
 <body>
