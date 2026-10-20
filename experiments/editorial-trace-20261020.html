@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>热点宝｜人工研究痕迹表达实验（分支预览）</title><style>
+:root{--ink:#1d2429;--muted:#7c8791;--line:#e8edf0;--red:#bf4b42;--green:#277a60;--amber:#a96532;--paper:#fff;--off:#f4f5f6}
+*{box-sizing:border-box}body{margin:0;background:#f1f3f5;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:white}
+.header{padding:18px 17px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:20px;font-weight:800;letter-spacing:-.4px}.sub{font-size:10px;letter-spacing:.4px;color:var(--muted)}
+.lab{color:var(--muted);font-size:10px;border:1px solid #dfe2e5;padding:4px 7px;border-radius:5px}
+.toolbar{padding:12px 17px;background:#fafbfc;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:8}
+.toolbar-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;font-size:11px;color:#626a70}
+.switch{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:#eceff1;border-radius:8px;padding:3px}
+.switch button{border:0;border-radius:6px;background:transparent;font-size:12px;color:#56616b;padding:10px 2px;cursor:pointer}
+.switch button[aria-pressed=true]{background:#fff;box-shadow:0 1px 4px #0001;color:#1d2429;font-weight:700}
+.meta-intro{padding:14px 17px 11px;color:#707980;font-size:11px;line-height:1.65;background:#fff}
+.meta-intro strong{color:#373e44;font-weight:650}
+.story{padding:19px 17px 20px;border-bottom:8px solid #f4f5f6}
+.meta{display:flex;gap:6px;align-items:center;margin-bottom:9px;color:#838b93;font-size:11px;min-height:20px}
+.meta .dot{color:#b8bec4}.pill{margin-left:auto;padding:3px 7px;border-radius:3px;font-size:10.5px;font-weight:650;white-space:nowrap}
+.pill.good{color:var(--red);background:#fbefed}.pill.bad{color:var(--green);background:#eaf4f0}
+h2{font-size:17px;line-height:1.48;margin:0;font-weight:730;letter-spacing:-.25px}
+.news{margin:8px 0 0;color:#616b73;font-size:13px;line-height:1.68}
+.src{margin-top:5px;color:#929aa1;font-size:10px}
+.research{margin-top:15px;padding-left:12px;border-left:2px solid #e5d9ce;position:relative}
+.research-caption{font-size:10px;color:#877663;margin-bottom:8px;letter-spacing:.2px}
+.steps{position:relative}.step{font-size:13px;color:#535d65;line-height:1.72;margin:0 0 4px;position:relative}
+.step + .step:before{content:"→";display:inline-block;color:#aeb5bb;margin-right:6px}
+.step mark{background:transparent;color:inherit}
+.step.last{font-weight:650;color:#8c5150}.story:has(.pill.bad) .step.last{color:#386e5b}
+.note{font-size:11px;line-height:1.65;color:#777d82;margin-top:8px}
+.note strong{font-weight:650;color:#747b80}
+.chain-btn{border:0;background:none;color:#8a6e5c;font-size:11px;padding:8px 0 0;cursor:pointer;display:block}
+.foot{padding:19px 17px 45px;font-size:10px;color:#89919a;line-height:1.7}
+html.js .story:not(.expanded) .step:nth-child(n+3),html.js .story:not(.expanded) .note{display:none}
+html.js .story:not(.expanded) .chain-btn::after{content:"查看完整链路 →"}
+html.js .story.expanded .chain-btn::after{content:"收起"}
+html:not(.js) .chain-btn{display:none}
+/* 试验B只调整信息强调层，不改正文/结论/链路数据 */
+.mode-b .research{border-left:1.5px solid #c7b4a5;padding-left:16px}
+.mode-b .research:before{content:"";width:6px;height:6px;position:absolute;left:-4px;top:0;border:1px solid #b98a66;border-radius:50%;background:white}
+.mode-b .step{padding:3px 0 3px 0;color:#4b5359;line-height:1.78}
+.mode-b .step+.step:before{content:"";display:block;position:absolute;width:1px;height:9px;background:#d7c5b3;top:-7px;left:2px;transform:rotate(12deg)}
+.mode-b .step mark{background:linear-gradient(to top,rgba(238,209,138,.42) 0 36%,transparent 36% 100%);box-decoration-break:clone;-webkit-box-decoration-break:clone;color:#30363a;font-weight:650;padding:0 1px}
+.mode-b .step mark:after{content:"";display:block;width:84%;height:1px;background:#d0a068;transform:rotate(-1deg);margin:-2px auto 0;opacity:.6}
+.mode-b .step.last{padding-top:7px}
+.mode-b .note{border-top:1px dashed #e9e3d8;margin-top:12px;padding-top:8px;color:#76726e}
+.mode-b .note strong{color:#9a775b}
+.mode-b .research-caption{font-family:serif;font-size:12px;color:#957459;letter-spacing:.6px}
+.mode-b .src{color:#929aa1}
+@media(min-width:650px){.app{box-shadow:0 0 55px #1b293012}.toolbar{top:0}}</style></head><body><div class="app mode-b"><header class="header"><div><div class="brand">热点宝</div><div class="sub">30秒拆透一个财经热点</div></div><span class="lab">独立实验 · 非正式版</span></header><div class="toolbar"><div class="toolbar-title"><span>相同内容 · 两种表达</span><span>2026.10.20 实验</span></div><div class="switch" aria-label="表达方式对照"><button data-mode="a" aria-pressed="false" type="button">A｜基础阅读样式</button><button data-mode="b" aria-pressed="true" type="button">B｜编辑批注感</button></div></div><div class="meta-intro"><strong>历史样本 · 2026年10月9日</strong>。三个事件的事实、拆解、结论与观察条件完全相同，切换仅改变强调与排版。A为接近原产品的简化样式，不是主站像素复刻。</div><main><article class="story" data-index="1">
+<div class="meta"><span>隔夜</span><span class="dot">·</span><span>商品</span><span class="dot">·</span><span>关键变化</span><span class="pill good">利好 · 油气资源</span></div>
+<h2>布油收涨4.07%，结算价104.28美元/桶</h2><p class="news">布伦特原油10月8日结算价104.28美元/桶，涨4.07%；WTI结算价91.49美元/桶，涨3.64%。海湾航运风险与美国飓风引发的生产中断担忧共同推升供应风险溢价。</p><div class="src">历史数据来源：财联社（内容样本日期：2026-10-09）</div>
+<section class="research" aria-label="投研拆解"><div class="research-caption">投研拆解</div><div class="steps">
+<p class="step ">海湾运输风险叠加美国生产中断担忧</p>
+<p class="step "><mark>供应扰动溢价上升，不代表需求已同步扩张</mark></p>
+<p class="step ">高油价若持续，上游开采单位收入改善</p>
+<p class="step last">利好油气资源</p>
+</div><p class="note"><strong>继续观察：</strong>关注运输安全、产量恢复与外交进展，风险缓解可能导致油价回落。</p><button class="chain-btn" type="button" aria-expanded="false" aria-label="展开或收起完整投研拆解"></button></section></article>
+<article class="story" data-index="2">
+<div class="meta"><span>昨日</span><span class="dot">·</span><span>宏观</span><span class="dot">·</span><span>关键变化</span><span class="pill good">利好 · 银行</span></div>
+<h2>首期1500亿元中央金融机构注资特别国债完成招标</h2><p class="news">财政部10月8日完成2026年中央金融机构注资特别国债一期招标，实际发行1500亿元，5年期，票面利率1.37%，用于支持相关中央金融机构补充资本。</p><div class="src">历史数据来源：证券时报（内容样本日期：2026-10-09）</div>
+<section class="research" aria-label="投研拆解"><div class="research-caption">投研拆解</div><div class="steps">
+<p class="step ">资本补充计划进入实际发债阶段</p>
+<p class="step "><mark>核心一级资本增加有助于增强相关银行风险吸收能力</mark></p>
+<p class="step ">资本约束缓解不等于信贷投放立即增加</p>
+<p class="step last">利好银行</p>
+</div><p class="note"><strong>继续观察：</strong>关注注资实际到账、资本充足率和后续信贷需求。</p><button class="chain-btn" type="button" aria-expanded="false" aria-label="展开或收起完整投研拆解"></button></section></article>
+<article class="story" data-index="3">
+<div class="meta"><span>昨日</span><span class="dot">·</span><span>产业</span><span class="dot">·</span><span>风险升温</span><span class="pill bad">利空 · 算力租赁</span></div>
+<h2>算力服务大单履约调查：16家公司中10家存在终止或未履约情况</h2><p class="news">财联社梳理2023年以来披露的执行期超过一年、合计金额超过5亿元的算力服务合同，涉及16家上市公司；其中10家公司存在合同披露后终止或至今未开始履行等情况。统计属报道样本，不代表全行业履约比例。</p><div class="src">历史数据来源：财联社（内容样本日期：2026-10-09）</div>
+<section class="research" aria-label="投研拆解"><div class="research-caption">投研拆解</div><div class="steps">
+<p class="step ">部分高额算力服务合同迟迟未能兑现</p>
+<p class="step "><mark>合同金额不等于可确认收入，商业兑现的不确定性上升</mark></p>
+<p class="step ">市场可能重新审视算力租赁订单质量与现金流预期</p>
+<p class="step last">利空算力租赁</p>
+</div><p class="note"><strong>继续观察：</strong>关注合同履约公告、实际交付及回款；样本不能简单外推至全部企业。</p><button class="chain-btn" type="button" aria-expanded="false" aria-label="展开或收起完整投研拆解"></button></section></article></main><footer class="foot">说明：本页只用于视觉与阅读体验实验。事件数据取自仓库 data/2026-10-09.json，未重新进行外部来源核验；不可作为当前市场资讯或投资依据。本页不接入自动发布，不修改生产页面或内容源。</footer></div><script>document.documentElement.classList.add('js');const root=document.querySelector('.app');for(const b of document.querySelectorAll('[data-mode]')){b.addEventListener('click',()=>{root.classList.toggle('mode-b',b.dataset.mode==='b');document.querySelectorAll('[data-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});}document.querySelectorAll('.story').forEach(s=>{const btn=s.querySelector('.chain-btn');btn.addEventListener('click',()=>{const expanded=s.classList.toggle('expanded');btn.setAttribute('aria-expanded',String(expanded));});});</script></body></html>
